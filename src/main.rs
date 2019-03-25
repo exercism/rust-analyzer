@@ -1,4 +1,5 @@
 use clap::{App, Arg, ArgMatches};
+use rust_analyzer::analyze_exercise;
 
 fn init_app<'a>() -> ArgMatches<'a> {
     App::new(env!("CARGO_PKG_NAME"))
@@ -23,6 +24,11 @@ fn init_app<'a>() -> ArgMatches<'a> {
         .get_matches()
 }
 
-fn main() {
-    let _matches = init_app();
+fn main() -> Result<(), std::io::Error> {
+    let matches = init_app();
+
+    analyze_exercise(
+        matches.value_of("slug").unwrap(),
+        matches.value_of("path").unwrap(),
+    )
 }
