@@ -1,3 +1,5 @@
+pub mod errors;
+use crate::errors::AnalyzerError;
 use std::{fs, path::Path};
 use AnalysisStatus::*;
 use ExerciseType::*;
@@ -13,6 +15,8 @@ enum AnalysisStatus {
     DisapproveWithComment,
     ReferToMentor,
 }
+
+pub type AnalyzerResult<T> = Result<T, AnalyzerError>;
 
 impl From<&str> for ExerciseType {
     fn from(input: &str) -> Self {
@@ -38,7 +42,7 @@ fn write_analysis_result(
     exercise_dir_path: &Path,
     status: AnalysisStatus,
     _comments: &[&str],
-) -> Result<(), std::io::Error> {
+) -> AnalyzerResult<()> {
     let analysis_file_path = exercise_dir_path.join("analysis.json");
 
     let analysis_content = format!(
@@ -46,27 +50,22 @@ fn write_analysis_result(
         Into::<&str>::into(status)
     );
 
-    fs::write(analysis_file_path, analysis_content)
+    fs::write(analysis_file_path, analysis_content)?;
+
+    Ok(())
 }
 
-pub fn analyze_exercise(slug: &str, path: &str) -> Result<(), std::io::Error> {
+pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
     let exercise_dir_path = Path::new(path);
 
     if !exercise_dir_path.exists() {
-        println!(
-            "The provided path does not exist: {}",
-            exercise_dir_path.display()
-        );
-
-        return Ok(());
+        return Err(AnalyzerError::InvalidPathError(path.to_string()));
     }
 
     let exercise_type = ExerciseType::from(slug);
 
     if let Unknown = exercise_type {
-        println!("rust-analyzer does not support the '{}' exercise", slug);
-
-        return Ok(());
+        return Err(AnalyzerError::InvalidTypeError(slug.to_string()));
     }
 
     write_analysis_result(&exercise_dir_path, ReferToMentor, &[""])

@@ -5,6 +5,7 @@ edition = "2018"
 description = "Exercism's automated analyzer for the Rust track."
 
 [dependencies]
+failure = "0.1.5"
 
 [dependencies.clap]
 version = "2.32.0"

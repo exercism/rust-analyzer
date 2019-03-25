@@ -24,11 +24,13 @@ fn init_app<'a>() -> ArgMatches<'a> {
         .get_matches()
 }
 
-fn main() -> Result<(), std::io::Error> {
+fn main() {
     let matches = init_app();
 
-    analyze_exercise(
+    if let Err(error) = analyze_exercise(
         matches.value_of("slug").unwrap(),
         matches.value_of("path").unwrap(),
-    )
+    ) {
+        println!("Error: {}", error);
+    }
 }
