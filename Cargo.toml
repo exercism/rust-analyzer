@@ -1,7 +1,11 @@
 [package]
 name = "rust-analyzer"
 version = "0.1.0"
-authors = ["zapolsky"]
 edition = "2018"
+description = "Exercism's automated analyzer for the Rust track."
 
 [dependencies]
+
+[dependencies.clap]
+version = "2.32.0"
+default-features = false
