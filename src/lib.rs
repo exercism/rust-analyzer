@@ -55,6 +55,26 @@ fn write_analysis_result(
     Ok(())
 }
 
+fn run_analysis(dir_path: &Path, exercise_type: ExerciseType) -> AnalyzerResult<()> {
+    use syn::Item::*;
+
+    let exercise_content = fs::read_to_string(dir_path.join("src").join("lib.rs"))?;
+
+    let parsed_exercise = syn::parse_file(&exercise_content)?;
+
+    let item = &parsed_exercise.items[0];
+
+    if let Fn(func) = item {
+        println!("Func name: {}", func.ident);
+
+        let expr = &func.block.stmts[0];
+
+        dbg!(expr);
+    }
+
+    Ok(())
+}
+
 pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
     let exercise_dir_path = Path::new(path);
 
@@ -67,6 +87,8 @@ pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
     if let Unknown = exercise_type {
         return Err(AnalyzerError::InvalidTypeError(slug.to_string()));
     }
+
+    run_analysis(&exercise_dir_path, exercise_type)?;
 
     write_analysis_result(&exercise_dir_path, ReferToMentor, &[""])
 }

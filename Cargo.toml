@@ -10,3 +10,7 @@ failure = "0.1.5"
 [dependencies.clap]
 version = "2.32.0"
 default-features = false
+
+[dependencies.syn]
+version = "0.15.30"
+features = ["full"]

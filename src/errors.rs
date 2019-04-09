@@ -8,10 +8,18 @@ pub enum AnalyzerError {
     InvalidTypeError(String),
     #[fail(display = "IO error: {}", _0)]
     IOError(#[cause] std::io::Error),
+    #[fail(display = "Syn parsing error: {}", _0)]
+    SynError(#[cause] syn::Error),
 }
 
 impl From<std::io::Error> for AnalyzerError {
     fn from(err: std::io::Error) -> Self {
         AnalyzerError::IOError(err)
+    }
+}
+
+impl From<syn::Error> for AnalyzerError {
+    fn from(err: syn::Error) -> Self {
+        AnalyzerError::SynError(err)
     }
 }
