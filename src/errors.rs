@@ -4,6 +4,8 @@ use failure::Fail;
 pub enum AnalyzerError {
     #[fail(display = "The provided path does not exist: {}", _0)]
     InvalidPathError(String),
+    #[fail(display = "Solution src/lib.rs file not found in the execise directory {}", _0)]
+    MissingSolutionFileError(String),
     #[fail(display = "rust-analyzer does not support the '{}' exercise", _0)]
     InvalidSlugError(String),
     #[fail(display = "IO error: {}", _0)]
