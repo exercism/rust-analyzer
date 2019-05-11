@@ -1,7 +1,7 @@
 use crate::AnalyzerResult;
 use std::{fs, path::Path};
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Debug)]
 pub enum AnalysisStatus {
     ApproveAsOptimal,
     ApproveWithComment,
@@ -9,6 +9,7 @@ pub enum AnalysisStatus {
     ReferToMentor,
 }
 
+#[derive(Debug, PartialEq)]
 pub struct AnalysisOutput {
     status: AnalysisStatus,
     comments: Vec<String>,
