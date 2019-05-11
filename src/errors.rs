@@ -5,7 +5,7 @@ pub enum AnalyzerError {
     #[fail(display = "The provided path does not exist: {}", _0)]
     InvalidPathError(String),
     #[fail(display = "rust-analyzer does not support the '{}' exercise", _0)]
-    InvalidTypeError(String),
+    InvalidSlugError(String),
     #[fail(display = "IO error: {}", _0)]
     IOError(#[cause] std::io::Error),
     #[fail(display = "Syn parsing error: {}", _0)]
