@@ -1,6 +1,6 @@
 mod analyzers;
 pub mod errors;
-use analyzers::Analyze;
+use analyzers::{Analyze, ReverseStringAnalyzer};
 use errors::AnalyzerError;
 use std::path::Path;
 
@@ -8,7 +8,7 @@ pub type AnalyzerResult<T> = Result<T, AnalyzerError>;
 
 fn get_analyzer(slug: &str) -> AnalyzerResult<&dyn Analyze> {
     match slug {
-        "reverse-string" => Ok(&analyzers::reverse_string::ReverseStringAnalyzer),
+        "reverse-string" => Ok(&ReverseStringAnalyzer),
         _ => Err(AnalyzerError::InvalidTypeError(slug.to_string())),
     }
 }
