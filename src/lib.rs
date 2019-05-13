@@ -24,6 +24,7 @@ pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
     Ok(())
 }
 
+#[cfg(test)]
 mod test {
     use super::analyze_exercise;
     use crate::errors::AnalyzerError;

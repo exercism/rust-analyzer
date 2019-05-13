@@ -1,3 +1,6 @@
+#[cfg(test)]
+mod test;
+
 use crate::{
     analyzers::{
         output::{AnalysisOutput, AnalysisStatus},
@@ -13,13 +16,13 @@ use std::{
 };
 use syn::File;
 
-enum ReverseStringComments {
+enum ReverseStringComment {
     SuggestDoingBonusExercise,
 }
 
-impl Display for ReverseStringComments {
+impl Display for ReverseStringComment {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use ReverseStringComments::*;
+        use ReverseStringComment::*;
         write!(
             f,
             "{}",
@@ -51,7 +54,7 @@ fn check_known_solutions(solution_ast: &File, known_solutions: &[&str]) -> Optio
 impl Analyze for ReverseStringAnalyzer {
     fn analyze(&self, solution_dir: &Path) -> AnalyzerResult<AnalysisOutput> {
         use AnalysisStatus::*;
-        use ReverseStringComments::*;
+        use ReverseStringComment::*;
 
         let solution_file_path = solution_dir.join("src").join("lib.rs");
         if !solution_file_path.exists() {
@@ -71,59 +74,5 @@ impl Analyze for ReverseStringAnalyzer {
                 })
             })
             .unwrap_or_else(|| AnalysisOutput::new(ReferToMentor, vec![])))
-    }
-}
-
-mod test {
-    use super::ReverseStringComments::*;
-    use super::*;
-    use crate::analyzers::Analyze;
-    use std::path::Path;
-
-    const SNIPPERTS_PREFIX: &str = "snippets/reverse-string";
-
-    fn test_analyzer_output(solution_dir: &Path, expected: AnalysisOutput) {
-        assert_eq!(
-            ReverseStringAnalyzer.analyze(solution_dir).ok(),
-            Some(expected)
-        )
-    }
-
-    #[test]
-    fn analyze_returns_approve_with_comment_1() {
-        test_analyzer_output(
-            &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_1"),
-            AnalysisOutput::new(
-                AnalysisStatus::ApproveWithComment,
-                vec![SuggestDoingBonusExercise.to_string()],
-            ),
-        );
-    }
-
-    #[test]
-    fn analyze_returns_approve_with_comment_2() {
-        test_analyzer_output(
-            &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_2"),
-            AnalysisOutput::new(
-                AnalysisStatus::ApproveWithComment,
-                vec![SuggestDoingBonusExercise.to_string()],
-            ),
-        );
-    }
-
-    #[test]
-    fn analyze_returns_approve_as_optimal_1() {
-        test_analyzer_output(
-            &Path::new(SNIPPERTS_PREFIX).join("optimal_1"),
-            AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
-        );
-    }
-
-    #[test]
-    fn analyze_returns_approve_as_optimal_2() {
-        test_analyzer_output(
-            &Path::new(SNIPPERTS_PREFIX).join("optimal_2"),
-            AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
-        );
     }
 }
