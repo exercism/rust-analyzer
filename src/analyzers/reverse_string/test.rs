@@ -16,7 +16,7 @@ fn analyze_returns_approve_with_comment_1() {
         &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_1"),
         AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
-            vec![ReverseStringComment::SuggestDoingBonusExercise.to_string()],
+            vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         ),
     );
 }
@@ -27,7 +27,7 @@ fn analyze_returns_approve_with_comment_2() {
         &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_2"),
         AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
-            vec![ReverseStringComment::SuggestDoingBonusExercise.to_string()],
+            vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         ),
     );
 }

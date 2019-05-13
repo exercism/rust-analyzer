@@ -17,7 +17,7 @@ use std::{
 use syn::File;
 
 enum ReverseStringComment {
-    SuggestDoingBonusExercise,
+    SuggestDoingBonusTest,
 }
 
 impl Display for ReverseStringComment {
@@ -27,7 +27,7 @@ impl Display for ReverseStringComment {
             f,
             "{}",
             match self {
-                SuggestDoingBonusExercise => "rust.reverse_string.suggest_doing_bonus_exercise",
+                SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
             }
         )
     }
@@ -69,7 +69,7 @@ impl Analyze for ReverseStringAnalyzer {
                 check_known_solutions(&solution_ast, &OPTIONAL_SOLUTIONS_WITH_COMMENTS).map(|_| {
                     AnalysisOutput::new(
                         ApproveWithComment,
-                        vec![SuggestDoingBonusExercise.to_string()],
+                        vec![SuggestDoingBonusTest.to_string()],
                     )
                 })
             })
