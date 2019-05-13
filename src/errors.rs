@@ -4,7 +4,10 @@ use failure::Fail;
 pub enum AnalyzerError {
     #[fail(display = "The provided path does not exist: {}", _0)]
     InvalidPathError(String),
-    #[fail(display = "Solution src/lib.rs file not found in the execise directory {}", _0)]
+    #[fail(
+        display = "Solution src/lib.rs file not found in the execise directory {}",
+        _0
+    )]
     MissingSolutionFileError(String),
     #[fail(display = "rust-analyzer does not support the '{}' exercise", _0)]
     InvalidSlugError(String),
@@ -12,6 +15,8 @@ pub enum AnalyzerError {
     IOError(#[cause] std::io::Error),
     #[fail(display = "Syn parsing error: {}", _0)]
     SynError(#[cause] syn::Error),
+    #[fail(display = "Serde json error: {}", _0)]
+    SerdeError(#[cause] serde_json::error::Error),
 }
 
 impl From<std::io::Error> for AnalyzerError {
@@ -23,5 +28,11 @@ impl From<std::io::Error> for AnalyzerError {
 impl From<syn::Error> for AnalyzerError {
     fn from(err: syn::Error) -> Self {
         AnalyzerError::SynError(err)
+    }
+}
+
+impl From<serde_json::error::Error> for AnalyzerError {
+    fn from(err: serde_json::error::Error) -> Self {
+        AnalyzerError::SerdeError(err)
     }
 }

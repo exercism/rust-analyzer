@@ -14,13 +14,13 @@ fn get_analyzer(slug: &str) -> AnalyzerResult<&dyn Analyze> {
 }
 
 pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
-    let exercise_dir_path = Path::new(path);
-    if !exercise_dir_path.exists() {
+    let solution_dir = Path::new(path);
+    if !solution_dir.exists() {
         return Err(AnalyzerError::InvalidPathError(path.to_string()));
     }
     get_analyzer(slug)?
-        .analyze(&exercise_dir_path)?
-        .write(&exercise_dir_path.join("analysis.json"))?;
+        .analyze(&solution_dir)?
+        .write(&solution_dir.join("analysis.json"))?;
     Ok(())
 }
 
@@ -37,7 +37,7 @@ mod test {
     }
 
     #[test]
-    fn analyze_exercise_returns_error_for_the_invalid_exercise_dir_path() {
+    fn analyze_exercise_returns_error_for_the_invalid_solution_dir() {
         match analyze_exercise("reverse-string", "/some/random/path") {
             Err(AnalyzerError::InvalidPathError(_)) => {},
             _ => panic!("analyze_exercise must return the InvalidPathError variant if the invalid exercise directory is provided"),
