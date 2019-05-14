@@ -5,7 +5,7 @@ pub enum AnalyzerError {
     #[fail(display = "The provided solution directory does not exist: {}", _0)]
     InvalidPathError(String),
     #[fail(
-        display = "Solution src/lib.rs file not found in the execise directory {}",
+        display = "Solution src/lib.rs file not found in the exercise directory {}",
         _0
     )]
     MissingSolutionFileError(String),

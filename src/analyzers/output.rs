@@ -1,6 +1,5 @@
 //! # output
-//! This module contains the structs that are necessary
-//! to represent the result of the exercise analysis
+//! This module contains the structures that are necessary to represent the result of the exercise analysis
 //! according to the [Exercism automatic mentoring interface](https://github.com/exercism/automated-mentoring-support/blob/master/docs/interface.md)
 
 use crate::AnalyzerResult;
