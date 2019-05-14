@@ -6,6 +6,8 @@ use std::path::Path;
 
 pub type AnalyzerResult<T> = Result<T, AnalyzerError>;
 
+/// Given the `slug` str, return the appropriate analyzer
+/// or an error, if there is no analyzer implemented for the `slug`.
 fn get_analyzer(slug: &str) -> AnalyzerResult<&dyn Analyze> {
     match slug {
         "reverse-string" => Ok(&ReverseStringAnalyzer),
@@ -13,14 +15,17 @@ fn get_analyzer(slug: &str) -> AnalyzerResult<&dyn Analyze> {
     }
 }
 
-pub fn analyze_exercise(slug: &str, path: &str) -> AnalyzerResult<()> {
-    let solution_dir = Path::new(path);
-    if !solution_dir.exists() {
-        return Err(AnalyzerError::InvalidPathError(path.to_string()));
+/// Analyzes the solution at the `solution_dir` directory, using the analyzer,
+/// the implementation of which depends on the `slug` argument. Writes the
+/// result of the analysis to the `solution_dir/analysis.json` file.
+pub fn analyze_exercise(slug: &str, solution_dir: &str) -> AnalyzerResult<()> {
+    let solution_dir_path = Path::new(solution_dir);
+    if !solution_dir_path.exists() {
+        return Err(AnalyzerError::InvalidPathError(solution_dir.to_string()));
     }
     get_analyzer(slug)?
-        .analyze(&solution_dir)?
-        .write(&solution_dir.join("analysis.json"))?;
+        .analyze(&solution_dir_path)?
+        .write(&solution_dir_path.join("analysis.json"))?;
     Ok(())
 }
 

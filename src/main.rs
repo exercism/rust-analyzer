@@ -2,6 +2,7 @@ use clap::{App, Arg, ArgMatches};
 use rust_analyzer::analyze_exercise;
 use std::process;
 
+/// Initializes the clap application.
 fn init_app<'a>() -> ArgMatches<'a> {
     App::new(env!("CARGO_PKG_NAME"))
         .version(env!("CARGO_PKG_VERSION"))
@@ -27,7 +28,6 @@ fn init_app<'a>() -> ArgMatches<'a> {
 
 fn main() {
     let matches = init_app();
-
     if let Err(error) = analyze_exercise(
         matches.value_of("slug").unwrap(),
         matches.value_of("path").unwrap(),
