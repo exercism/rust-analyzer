@@ -16,7 +16,7 @@ use std::{
 };
 use syn::File;
 
-enum ReverseStringComment {
+pub enum ReverseStringComment {
     SuggestDoingBonusTest,
 }
 

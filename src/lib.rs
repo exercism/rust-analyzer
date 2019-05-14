@@ -1,4 +1,4 @@
-mod analyzers;
+pub mod analyzers;
 pub mod errors;
 use analyzers::{Analyze, ReverseStringAnalyzer};
 use errors::AnalyzerError;
