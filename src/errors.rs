@@ -2,7 +2,7 @@ use failure::Fail;
 
 #[derive(Debug, Fail)]
 pub enum AnalyzerError {
-    #[fail(display = "The provided path does not exist: {}", _0)]
+    #[fail(display = "The provided solution directory does not exist: {}", _0)]
     InvalidPathError(String),
     #[fail(
         display = "Solution src/lib.rs file not found in the execise directory {}",
@@ -13,9 +13,9 @@ pub enum AnalyzerError {
     InvalidSlugError(String),
     #[fail(display = "IO error: {}", _0)]
     IOError(#[cause] std::io::Error),
-    #[fail(display = "Syn parsing error: {}", _0)]
+    #[fail(display = "Solution code parsing error: {}", _0)]
     SynError(#[cause] syn::Error),
-    #[fail(display = "Serde json error: {}", _0)]
+    #[fail(display = "Serialization/deserialization error: {}", _0)]
     SerdeError(#[cause] serde_json::error::Error),
 }
 

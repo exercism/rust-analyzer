@@ -67,10 +67,7 @@ impl Analyze for ReverseStringAnalyzer {
             .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
             .or_else(|| {
                 check_known_solutions(&solution_ast, &OPTIONAL_SOLUTIONS_WITH_COMMENTS).map(|_| {
-                    AnalysisOutput::new(
-                        ApproveWithComment,
-                        vec![SuggestDoingBonusTest.to_string()],
-                    )
+                    AnalysisOutput::new(ApproveWithComment, vec![SuggestDoingBonusTest.to_string()])
                 })
             })
             .unwrap_or_else(|| AnalysisOutput::new(ReferToMentor, vec![])))
