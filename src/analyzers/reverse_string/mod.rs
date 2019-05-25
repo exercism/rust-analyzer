@@ -56,7 +56,7 @@ impl Analyze for ReverseStringAnalyzer {
         use AnalysisStatus::*;
         use ReverseStringComment::*;
 
-        let solution_file_path = solution_dir.join("src").join("lib.rs");
+        let solution_file_path = solution_dir.join("lib.rs");
         if !solution_file_path.exists() {
             return Err(AnalyzerError::MissingSolutionFileError(
                 solution_dir.display().to_string(),
