@@ -73,3 +73,17 @@ fn reverse_string_analyzer_writes_json_optimal_with_comment_2() {
         ),
     )
 }
+
+#[test]
+fn reverse_string_analyzer_run_on_every_solution() {
+    let snippets_dir = Path::new("snippets").join("reverse-string");
+    assert!(snippets_dir.exists());
+    snippets_dir
+        .read_dir()
+        .expect("Failed to get the directories from the reverse-string snippets directory")
+        .for_each(|solution_dir| {
+            let solution_dir = solution_dir.unwrap();
+            let solution_path = solution_dir.path();
+            let _analysis = analyze_exercise(REVERSE_STRING_SLUG, solution_path.to_str().unwrap());
+        })
+}
