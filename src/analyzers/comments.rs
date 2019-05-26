@@ -9,6 +9,7 @@ pub enum ReverseStringComment {
 
 pub enum GeneralComment {
     SolutionFileNotFound,
+    FailedToParseSolutionFile,
 }
 
 impl Display for ReverseStringComment {
@@ -32,6 +33,7 @@ impl Display for GeneralComment {
             "{}",
             match self {
                 SolutionFileNotFound => "rust.general.solution_file_not_found",
+                FailedToParseSolutionFile => "rust.general.failed_to_parse_solution_file",
             }
         )
     }

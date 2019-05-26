@@ -41,7 +41,15 @@ impl Analyze for ReverseStringAnalyzer {
                 vec![GeneralComment::SolutionFileNotFound.to_string()],
             ));
         }
-        let solution_ast = syn::parse_file(&fs::read_to_string(solution_file_path)?)?;
+        let solution_ast =
+            if let Ok(solution_ast) = syn::parse_file(&fs::read_to_string(solution_file_path)?) {
+                solution_ast
+            } else {
+                return Ok(AnalysisOutput::new(
+                    ReferToMentor,
+                    vec![GeneralComment::FailedToParseSolutionFile.to_string()],
+                ));
+            };
         Ok(check_known_solutions(&solution_ast, &OPTIONAL_SOLUTIONS)
             .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
             .or_else(|| {
