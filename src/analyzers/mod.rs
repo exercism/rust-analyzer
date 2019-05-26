@@ -3,6 +3,7 @@
 //! Each analyzer is located in the `exercise_slug/mod.rs` file.
 //! The tests for each of the analyzer are located in the `exercise_slug/test.rs` file.
 
+pub mod comments;
 pub mod output;
 pub mod reverse_string;
 use crate::AnalyzerResult;

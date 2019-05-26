@@ -9,29 +9,8 @@ use crate::{
     errors::AnalyzerError,
     AnalyzerResult,
 };
-use std::{
-    fmt::{self, Display},
-    fs,
-    path::Path,
-};
+use std::{fs, path::Path};
 use syn::File;
-
-pub enum ReverseStringComment {
-    SuggestDoingBonusTest,
-}
-
-impl Display for ReverseStringComment {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use ReverseStringComment::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
-            }
-        )
-    }
-}
 
 pub struct ReverseStringAnalyzer;
 
@@ -53,8 +32,8 @@ fn check_known_solutions(solution_ast: &File, known_solutions: &[&str]) -> Optio
 
 impl Analyze for ReverseStringAnalyzer {
     fn analyze(&self, solution_dir: &Path) -> AnalyzerResult<AnalysisOutput> {
+        use crate::analyzers::comments::ReverseStringComment::*;
         use AnalysisStatus::*;
-        use ReverseStringComment::*;
 
         let solution_file_path = solution_dir.join("lib.rs");
         if !solution_file_path.exists() {

@@ -1,8 +1,8 @@
 use rust_analyzer::{
     analyze_exercise,
     analyzers::{
+        comments::ReverseStringComment,
         output::{AnalysisOutput, AnalysisStatus},
-        reverse_string::ReverseStringComment,
     },
 };
 use std::{fs, path::Path};

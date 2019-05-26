@@ -1,4 +1,5 @@
 use super::*;
+use crate::analyzers::comments::ReverseStringComment;
 use std::path::Path;
 
 const SNIPPERTS_PREFIX: &str = "snippets/reverse-string";
