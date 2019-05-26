@@ -7,6 +7,10 @@ pub enum ReverseStringComment {
     SuggestDoingBonusTest,
 }
 
+pub enum GeneralComment {
+    SolutionFileNotFound,
+}
+
 impl Display for ReverseStringComment {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use ReverseStringComment::*;
@@ -15,6 +19,19 @@ impl Display for ReverseStringComment {
             "{}",
             match self {
                 SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
+            }
+        )
+    }
+}
+
+impl Display for GeneralComment {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use GeneralComment::*;
+        write!(
+            f,
+            "{}",
+            match self {
+                SolutionFileNotFound => "rust.general.solution_file_not_found",
             }
         )
     }
