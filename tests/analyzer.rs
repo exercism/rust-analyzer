@@ -84,6 +84,6 @@ fn reverse_string_analyzer_run_on_every_solution() {
         .for_each(|solution_dir| {
             let solution_dir = solution_dir.unwrap();
             let solution_path = solution_dir.path();
-            let _analysis = analyze_exercise(REVERSE_STRING_SLUG, solution_path.to_str().unwrap());
+            assert!(analyze_exercise(REVERSE_STRING_SLUG, solution_path.to_str().unwrap()).is_ok());
         })
 }
