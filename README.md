@@ -4,7 +4,7 @@
 
 ## Supported exercises
 
-- `reverse-string`
+- [`reverse-string`](https://github.com/exercism/rust-analyzer/blob/master/src/analyzers/reverse_string/README.md)
 
 ## Usage
 
