@@ -6,7 +6,7 @@
 pub mod comments;
 pub mod output;
 pub mod reverse_string;
-use crate::AnalyzerResult;
+use crate::Result;
 use output::AnalysisOutput;
 pub use reverse_string::ReverseStringAnalyzer;
 use std::path::Path;
@@ -15,5 +15,5 @@ use std::path::Path;
 /// Should be implemented by every exercise analyzer.
 pub trait Analyze {
     /// Tries to analyze the solution provided in the `solution_dir` path argument.
-    fn analyze(&self, solution_dir: &Path) -> AnalyzerResult<AnalysisOutput>;
+    fn analyze(&self, solution_dir: &Path) -> Result<AnalysisOutput>;
 }

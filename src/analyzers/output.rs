@@ -2,7 +2,7 @@
 //! This module contains the structures that are necessary to represent the result of the exercise analysis
 //! according to the [Exercism automatic mentoring interface](https://github.com/exercism/automated-mentoring-support/blob/master/docs/interface.md)
 
-use crate::AnalyzerResult;
+use crate::Result;
 use serde::{Serialize, Serializer};
 use std::{fs, path::Path};
 
@@ -28,7 +28,7 @@ impl AnalysisOutput {
     }
 
     /// Writes self to the `analysis_file_path` as a JSON file.
-    pub fn write(&self, analysis_file_path: &Path) -> AnalyzerResult<()> {
+    pub fn write(&self, analysis_file_path: &Path) -> Result<()> {
         fs::write(analysis_file_path, serde_json::to_string_pretty(self)?)?;
         Ok(())
     }
@@ -47,7 +47,7 @@ impl From<AnalysisStatus> for &str {
 }
 
 impl Serialize for AnalysisStatus {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
     where
         S: Serializer,
     {

@@ -7,7 +7,7 @@ use crate::{
         output::{AnalysisOutput, AnalysisStatus},
         Analyze,
     },
-    AnalyzerResult,
+    Result,
 };
 use std::{fs, path::Path};
 use syn::File;
@@ -31,7 +31,7 @@ fn check_known_solutions(solution_ast: &File, known_solutions: &[&str]) -> Optio
 }
 
 impl Analyze for ReverseStringAnalyzer {
-    fn analyze(&self, solution_dir: &Path) -> AnalyzerResult<AnalysisOutput> {
+    fn analyze(&self, solution_dir: &Path) -> Result<AnalysisOutput> {
         use AnalysisStatus::*;
 
         let solution_file_path = solution_dir.join("lib.rs");
