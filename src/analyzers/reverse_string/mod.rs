@@ -14,11 +14,11 @@ use syn::File;
 
 pub struct ReverseStringAnalyzer;
 
-const OPTIONAL_SOLUTIONS: [&str; 2] = [
+const OPTIMAL_SOLUTIONS: [&str; 2] = [
     "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect() }",
     "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect::<String>() }"
 ];
-const OPTIONAL_SOLUTIONS_WITH_COMMENTS: [&str; 2] = [
+const OPTIMAL_SOLUTIONS_WITH_COMMENTS: [&str; 2] = [
     "pub fn reverse(input: &str) -> String { input.chars().rev().collect() }",
     "pub fn reverse(input: &str) -> String { input.chars().rev().collect::<String>() }",
 ];
@@ -50,10 +50,10 @@ impl Analyze for ReverseStringAnalyzer {
                     vec![GeneralComment::FailedToParseSolutionFile.to_string()],
                 ));
             };
-        Ok(check_known_solutions(&solution_ast, &OPTIONAL_SOLUTIONS)
+        Ok(check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS)
             .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
             .or_else(|| {
-                check_known_solutions(&solution_ast, &OPTIONAL_SOLUTIONS_WITH_COMMENTS).map(|_| {
+                check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS_WITH_COMMENTS).map(|_| {
                     AnalysisOutput::new(
                         ApproveWithComment,
                         vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
