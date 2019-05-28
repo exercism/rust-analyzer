@@ -4,7 +4,11 @@
 
 use crate::Result;
 use serde::{Serialize, Serializer};
-use std::{fs, path::Path};
+use std::{
+    fmt::{self, Display},
+    fs,
+    path::Path,
+};
 
 /// The status of the exercise analysis.
 #[derive(Copy, Clone, PartialEq, Debug)]
@@ -34,15 +38,19 @@ impl AnalysisOutput {
     }
 }
 
-impl From<AnalysisStatus> for &str {
-    fn from(status: AnalysisStatus) -> Self {
+impl Display for AnalysisStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use AnalysisStatus::*;
-        match status {
-            ApproveAsOptimal => "approve_as_optimal",
-            ApproveWithComment => "approve_with_comment",
-            DisapproveWithComment => "disapprove_with_comment",
-            ReferToMentor => "refer_to_mentor",
-        }
+        write!(
+            f,
+            "{}",
+            match self {
+                ApproveAsOptimal => "approve_as_optimal",
+                ApproveWithComment => "approve_with_comment",
+                DisapproveWithComment => "disapprove_with_comment",
+                ReferToMentor => "refer_to_mentor",
+            }
+        )
     }
 }
 
@@ -51,6 +59,6 @@ impl Serialize for AnalysisStatus {
     where
         S: Serializer,
     {
-        serializer.serialize_str((*self).into())
+        serializer.serialize_str(&self.to_string())
     }
 }
