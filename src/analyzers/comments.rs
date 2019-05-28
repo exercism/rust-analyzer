@@ -1,28 +1,11 @@
 //! #comments
-//! This module contains comments and their string representation used by every analyzer.
+//! This module contains general comments and their string representation that can be used by any analyzer.
 
 use std::fmt::{self, Display};
-
-pub enum ReverseStringComment {
-    SuggestDoingBonusTest,
-}
 
 pub enum GeneralComment {
     SolutionFileNotFound,
     FailedToParseSolutionFile,
-}
-
-impl Display for ReverseStringComment {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use ReverseStringComment::*;
-        write!(
-            f,
-            "{}",
-            match self {
-                SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
-            }
-        )
-    }
 }
 
 impl Display for GeneralComment {

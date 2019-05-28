@@ -1,14 +1,16 @@
+pub mod comments;
 #[cfg(test)]
 mod test;
 
 use crate::{
     analyzers::{
-        comments::{GeneralComment, ReverseStringComment},
+        comments::GeneralComment,
         output::{AnalysisOutput, AnalysisStatus},
         Analyze,
     },
     Result,
 };
+use comments::ReverseStringComment;
 use std::{fs, path::Path};
 use syn::File;
 
