@@ -1,8 +1,12 @@
 pub mod analyzers;
 pub mod errors;
-use analyzers::{Analyze, ReverseStringAnalyzer};
+use analyzers::{
+    comments::GeneralComment,
+    output::{AnalysisOutput, AnalysisStatus},
+    Analyze, ReverseStringAnalyzer,
+};
 use errors::AnalyzerError;
-use std::path::Path;
+use std::{fs, path::Path};
 
 pub type Result<T> = std::result::Result<T, AnalyzerError>;
 
@@ -23,9 +27,24 @@ pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
     if !solution_dir_path.exists() {
         return Err(AnalyzerError::InvalidPathError(solution_dir.to_string()));
     }
-    get_analyzer(slug)?
-        .analyze(&solution_dir_path)?
-        .write(&solution_dir_path.join("analysis.json"))?;
+    let solution_file_path = solution_dir_path.join("lib.rs");
+    let analysis_output = if !solution_file_path.exists() {
+        // Solution file does not exist => refer to mentor.
+        AnalysisOutput::new(
+            AnalysisStatus::ReferToMentor,
+            vec![GeneralComment::FailedToParseSolutionFile.to_string()],
+        )
+    } else if let Ok(solution_ast) = syn::parse_file(&fs::read_to_string(solution_file_path)?) {
+        // Solution file exists and can be parsed by syn => run analysis
+        get_analyzer(slug)?.analyze(&solution_ast)?
+    } else {
+        // Solution file could not be parsed by syn => refer to mentor
+        AnalysisOutput::new(
+            AnalysisStatus::ReferToMentor,
+            vec![GeneralComment::FailedToParseSolutionFile.to_string()],
+        )
+    };
+    analysis_output.write(&solution_dir_path.join("analysis.json"))?;
     Ok(())
 }
 
@@ -36,7 +55,7 @@ mod test {
 
     #[test]
     fn analyze_exercise_returns_error_for_the_unknown_slug() {
-        match analyze_exercise("unknown-slug", ".") {
+        match analyze_exercise("unknown-slug", "snippets/reverse-string/optimal_1") {
             Err(AnalyzerError::InvalidSlugError(_)) => {},
             _ => panic!("analyze_exercise must return the InvalidSlugError variant if the wrong slug is provided"),
         }

@@ -1,12 +1,10 @@
 use super::*;
 use crate::analyzers::reverse_string::comments::ReverseStringComment;
-use std::path::Path;
+use syn::File;
 
-const SNIPPERTS_PREFIX: &str = "snippets/reverse-string";
-
-fn test_analyzer_output(solution_dir: &Path, expected: AnalysisOutput) {
+fn test_analyzer_output(solution_ast: &File, expected: AnalysisOutput) {
     assert_eq!(
-        ReverseStringAnalyzer.analyze(solution_dir).ok(),
+        ReverseStringAnalyzer.analyze(solution_ast).ok(),
         Some(expected)
     )
 }
@@ -14,7 +12,10 @@ fn test_analyzer_output(solution_dir: &Path, expected: AnalysisOutput) {
 #[test]
 fn analyze_returns_approve_with_comment_1() {
     test_analyzer_output(
-        &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_1"),
+        &syn::parse_str::<File>(
+            "pub fn reverse(input: &str) -> String { input.chars().rev().collect() }",
+        )
+        .unwrap(),
         AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
@@ -25,7 +26,10 @@ fn analyze_returns_approve_with_comment_1() {
 #[test]
 fn analyze_returns_approve_with_comment_2() {
     test_analyzer_output(
-        &Path::new(SNIPPERTS_PREFIX).join("optimal_with_comment_2"),
+        &syn::parse_str::<File>(
+            "pub fn reverse(input: &str) -> String { input.chars().rev().collect::<String>() }",
+        )
+        .unwrap(),
         AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
@@ -36,7 +40,9 @@ fn analyze_returns_approve_with_comment_2() {
 #[test]
 fn analyze_returns_approve_as_optimal_1() {
     test_analyzer_output(
-        &Path::new(SNIPPERTS_PREFIX).join("optimal_1"),
+        &syn::parse_str::<File>(
+            "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect() }",
+        ).unwrap(),
         AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
     );
 }
@@ -44,7 +50,9 @@ fn analyze_returns_approve_as_optimal_1() {
 #[test]
 fn analyze_returns_approve_as_optimal_2() {
     test_analyzer_output(
-        &Path::new(SNIPPERTS_PREFIX).join("optimal_2"),
+        &syn::parse_str::<File>(
+            "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect::<String>() }",
+        ).unwrap(),
         AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
     );
 }

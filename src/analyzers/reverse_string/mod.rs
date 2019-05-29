@@ -4,14 +4,12 @@ mod test;
 
 use crate::{
     analyzers::{
-        comments::GeneralComment,
         output::{AnalysisOutput, AnalysisStatus},
         Analyze,
     },
     Result,
 };
 use comments::ReverseStringComment;
-use std::{fs, path::Path};
 use syn::File;
 
 pub struct ReverseStringAnalyzer;
@@ -33,25 +31,8 @@ fn check_known_solutions(solution_ast: &File, known_solutions: &[&str]) -> Optio
 }
 
 impl Analyze for ReverseStringAnalyzer {
-    fn analyze(&self, solution_dir: &Path) -> Result<AnalysisOutput> {
+    fn analyze(&self, solution_ast: &File) -> Result<AnalysisOutput> {
         use AnalysisStatus::*;
-
-        let solution_file_path = solution_dir.join("lib.rs");
-        if !solution_file_path.exists() {
-            return Ok(AnalysisOutput::new(
-                ReferToMentor,
-                vec![GeneralComment::SolutionFileNotFound.to_string()],
-            ));
-        }
-        let solution_ast =
-            if let Ok(solution_ast) = syn::parse_file(&fs::read_to_string(solution_file_path)?) {
-                solution_ast
-            } else {
-                return Ok(AnalysisOutput::new(
-                    ReferToMentor,
-                    vec![GeneralComment::FailedToParseSolutionFile.to_string()],
-                ));
-            };
         Ok(check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS)
             .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
             .or_else(|| {
