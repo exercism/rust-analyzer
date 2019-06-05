@@ -50,7 +50,10 @@ fn reverse_string_analyzer_writes_json_optimal_2() {
 
 #[test]
 fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_1() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_1");
+    let solution_dir = format!(
+        "{}/{}",
+        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_1"
+    );
     assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
     check_analysis_json(
         &solution_dir,
@@ -63,7 +66,10 @@ fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crat
 
 #[test]
 fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_2() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_2");
+    let solution_dir = format!(
+        "{}/{}",
+        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_2"
+    );
     assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
     check_analysis_json(
         &solution_dir,
@@ -75,7 +81,10 @@ fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crat
 }
 #[test]
 fn reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_1() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_1");
+    let solution_dir = format!(
+        "{}/{}",
+        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_1"
+    );
     assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
     check_analysis_json(
         &solution_dir,
@@ -88,7 +97,10 @@ fn reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_1() {
 
 #[test]
 fn reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_2() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_2");
+    let solution_dir = format!(
+        "{}/{}",
+        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_2"
+    );
     assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
     check_analysis_json(
         &solution_dir,

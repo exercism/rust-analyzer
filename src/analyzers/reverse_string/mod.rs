@@ -38,23 +38,25 @@ impl Analyze for ReverseStringAnalyzer {
     fn analyze(&self, solution_ast: &File) -> Result<AnalysisOutput> {
         use AnalysisStatus::*;
         Ok(check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS)
-           .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
-           .or_else(|| {
-               check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS_WITH_EXTERN_CRATE).map(|_| {
-                   AnalysisOutput::new(
-                       ApproveWithComment,
-                       vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
-                   )
-               })
-           })
-           .or_else(|| {
-               check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS_SUGGEST_BONUS).map(|_| {
-                   AnalysisOutput::new(
-                       ApproveWithComment,
-                       vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
-                   )
-               })
-           })
-           .unwrap_or_else(|| AnalysisOutput::new(ReferToMentor, vec![])))
+            .map(|_| AnalysisOutput::new(ApproveAsOptimal, vec![]))
+            .or_else(|| {
+                check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS_WITH_EXTERN_CRATE).map(
+                    |_| {
+                        AnalysisOutput::new(
+                            ApproveWithComment,
+                            vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
+                        )
+                    },
+                )
+            })
+            .or_else(|| {
+                check_known_solutions(&solution_ast, &OPTIMAL_SOLUTIONS_SUGGEST_BONUS).map(|_| {
+                    AnalysisOutput::new(
+                        ApproveWithComment,
+                        vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
+                    )
+                })
+            })
+            .unwrap_or_else(|| AnalysisOutput::new(ReferToMentor, vec![])))
     }
 }
