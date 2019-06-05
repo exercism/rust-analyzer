@@ -22,6 +22,28 @@ pub fn reverse(input: &str) -> String {
 
 ## approve_with_comment
 
+The following two cases are approved with the `rust.reverse_string.suggest_removing_extern_crate` comment:
+
+```rust
+extern crate unicode_segmentation;
+
+use unicode_segmentation::UnicodeSegmentation;
+
+pub fn reverse(input: &str) -> String {
+    input.graphemes(true).rev().collect()
+}
+```
+
+```rust
+extern crate unicode_segmentation;
+
+use unicode_segmentation::UnicodeSegmentation;
+
+pub fn reverse(input: &str) -> String {
+    input.graphemes(true).rev().collect::<String>()
+}
+```
+
 The following two cases are approved with the `rust.reverse_string.suggest_doing_bonus_test` comment:
 
 ```rust
