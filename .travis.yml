@@ -4,6 +4,9 @@ rust:
     - stable
     - nightly
 
+services:
+  - docker
+
 cache: cargo
 
 before_script:
@@ -16,4 +19,8 @@ script:
 
 matrix:
   allow_failures:
-    - rust: nightly
+      - rust: nightly
+  include:
+      - name: Docker
+        script:
+            - docker build .
