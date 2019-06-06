@@ -22,7 +22,5 @@ matrix:
       - rust: nightly
   include:
       - name: Docker
-        language: rust
-        rust: stable
         script:
             - docker build .
