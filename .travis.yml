@@ -16,8 +16,13 @@ script:
 - cargo build --verbose
 - cargo test --verbose
 - cargo fmt --all -- --check
-- docker build .
 
 matrix:
   allow_failures:
-    - rust: nightly
+      - rust: nightly
+  include:
+      - name: Docker
+        language: rust
+        rust: stable
+        script:
+            - docker build .
