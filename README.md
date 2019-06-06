@@ -46,7 +46,3 @@ From the project root use the following command:
 ```shell
 $ docker build -t rust_analyzer .
 ```
-
-## Notes
-
-If you are using `rust-analyzer` to analyze a solution on your machine, please note that it expects that the solution file `lib.rs` is located in the root of the solution directory, in contrast to the typical Rust exercise layout, where the solution is located in the `src/lib.rs`.
