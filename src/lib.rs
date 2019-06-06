@@ -23,7 +23,7 @@ fn get_analyzer(slug: &str) -> Result<&dyn Analyze> {
 /// the implementation of which depends on the `slug` argument. Writes the
 /// result of the analysis to the `solution_dir/analysis.json` file.
 pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
-    let solution_dir_path = Path::new(solution_dir);
+    let solution_dir_path = Path::new(solution_dir)
     if !solution_dir_path.exists() {
         return Err(AnalyzerError::InvalidPathError(solution_dir.to_string()));
     }
