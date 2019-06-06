@@ -27,7 +27,7 @@ pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
     if !solution_dir_path.exists() {
         return Err(AnalyzerError::InvalidPathError(solution_dir.to_string()));
     }
-    let solution_file_path = solution_dir_path.join("lib.rs");
+    let solution_file_path = solution_dir_path.join("src").join("lib.rs");
     let analysis_output = if !solution_file_path.exists() {
         // Solution file does not exist => refer to mentor.
         AnalysisOutput::new(
