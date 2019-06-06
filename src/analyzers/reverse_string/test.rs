@@ -10,7 +10,35 @@ fn test_analyzer_output(solution_ast: &File, expected: AnalysisOutput) {
 }
 
 #[test]
-fn analyze_returns_approve_with_comment_1() {
+fn analyze_returns_approve_with_comment_suggest_remove_extern_crate_1() {
+    test_analyzer_output(
+        &syn::parse_str::<File>(
+            "extern crate unicode_segmentation; use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect() }",
+        )
+        .unwrap(),
+        AnalysisOutput::new(
+            AnalysisStatus::ApproveWithComment,
+            vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
+        ),
+    );
+}
+
+#[test]
+fn analyze_returns_approve_with_comment_suggest_remove_extern_crate_2() {
+    test_analyzer_output(
+        &syn::parse_str::<File>(
+            "extern crate unicode_segmentation; use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect::<String>() }",
+        )
+        .unwrap(),
+        AnalysisOutput::new(
+            AnalysisStatus::ApproveWithComment,
+            vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
+        ),
+    );
+}
+
+#[test]
+fn analyze_returns_approve_with_comment_suggest_bonus_1() {
     test_analyzer_output(
         &syn::parse_str::<File>(
             "pub fn reverse(input: &str) -> String { input.chars().rev().collect() }",
@@ -24,7 +52,7 @@ fn analyze_returns_approve_with_comment_1() {
 }
 
 #[test]
-fn analyze_returns_approve_with_comment_2() {
+fn analyze_returns_approve_with_comment_suggest_bonus_2() {
     test_analyzer_output(
         &syn::parse_str::<File>(
             "pub fn reverse(input: &str) -> String { input.chars().rev().collect::<String>() }",

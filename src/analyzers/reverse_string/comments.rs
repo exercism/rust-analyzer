@@ -4,6 +4,7 @@
 use std::fmt::{self, Display};
 
 pub enum ReverseStringComment {
+    SuggestRemovingExternCrate,
     SuggestDoingBonusTest,
 }
 
@@ -14,6 +15,7 @@ impl Display for ReverseStringComment {
             f,
             "{}",
             match self {
+                SuggestRemovingExternCrate => "rust.reverse_string.suggest_removing_extern_crate",
                 SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
             }
         )
