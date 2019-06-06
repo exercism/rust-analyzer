@@ -4,6 +4,9 @@ rust:
     - stable
     - nightly
 
+services:
+  - docker
+
 cache: cargo
 
 before_script:
@@ -13,6 +16,7 @@ script:
 - cargo build --verbose
 - cargo test --verbose
 - cargo fmt --all -- --check
+- docker build .
 
 matrix:
   allow_failures:
