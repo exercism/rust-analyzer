@@ -8,10 +8,9 @@ use rust_analyzer::{
 use std::{fs, path::Path};
 
 const REVERSE_STRING_SLUG: &str = "reverse-string";
-const REVERSE_STRING_DIR_PREFIX: &str = "snippets/reverse-string";
 
-fn check_analysis_json(solution_dir: &str, expected: &AnalysisOutput) {
-    let analysis_json_path = Path::new(solution_dir).join("analysis.json");
+fn check_analysis_json(solution_dir_path: &Path, expected: &AnalysisOutput) {
+    let analysis_json_path = solution_dir_path.join("analysis.json");
     assert!(analysis_json_path.exists());
     let analysis_json_content = fs::read_to_string(&analysis_json_path).expect(&format!(
         "Failed to read the analysis.json file at path {}",
@@ -28,88 +27,72 @@ fn check_analysis_json(solution_dir: &str, expected: &AnalysisOutput) {
     );
 }
 
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_1() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_1");
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
-    )
+macro_rules! analyzer_test_case {
+    ($test_case_name:ident(slug=$slug:expr, snippet_dir=$snippet_dir:expr, expected_output=$expected_output:expr)) => {
+        #[test]
+        fn $test_case_name() {
+            let solution_dir_path = Path::new("snippets").join($slug).join($snippet_dir);
+            assert!(analyze_exercise($slug, solution_dir_path.to_str().unwrap()).is_ok());
+            check_analysis_json(&solution_dir_path, &$expected_output);
+        }
+    };
 }
 
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_2() {
-    let solution_dir = format!("{}/{}", REVERSE_STRING_DIR_PREFIX, "optimal_2");
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
-    )
-}
+analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_1(
+    slug = REVERSE_STRING_SLUG,
+    snippet_dir = "optimal_1",
+    expected_output = AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![])
+));
 
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_1() {
-    let solution_dir = format!(
-        "{}/{}",
-        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_1"
-    );
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(
+analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_2(
+    slug = REVERSE_STRING_SLUG,
+    snippet_dir = "optimal_2",
+    expected_output = AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![])
+));
+
+analyzer_test_case!(
+    reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_comment_1(
+        slug = REVERSE_STRING_SLUG,
+        snippet_dir = "optimal_with_suggest_removing_extern_crate_1",
+        expected_output = AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
-        ),
+        )
     )
-}
+);
 
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_2() {
-    let solution_dir = format!(
-        "{}/{}",
-        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_removing_extern_crate_2"
-    );
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(
+analyzer_test_case!(
+    reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_comment_2(
+        slug = REVERSE_STRING_SLUG,
+        snippet_dir = "optimal_with_suggest_removing_extern_crate_2",
+        expected_output = AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
-        ),
+        )
     )
-}
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_1() {
-    let solution_dir = format!(
-        "{}/{}",
-        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_1"
-    );
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
-            vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
-        ),
-    )
-}
+);
 
-#[test]
-fn reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_2() {
-    let solution_dir = format!(
-        "{}/{}",
-        REVERSE_STRING_DIR_PREFIX, "optimal_with_suggest_bonus_2"
-    );
-    assert!(analyze_exercise(REVERSE_STRING_SLUG, &solution_dir).is_ok());
-    check_analysis_json(
-        &solution_dir,
-        &AnalysisOutput::new(
+analyzer_test_case!(
+    reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_1(
+        slug = REVERSE_STRING_SLUG,
+        snippet_dir = "optimal_with_suggest_bonus_1",
+        expected_output = AnalysisOutput::new(
             AnalysisStatus::ApproveWithComment,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
-        ),
+        )
     )
-}
+);
+
+analyzer_test_case!(
+    reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_2(
+        slug = REVERSE_STRING_SLUG,
+        snippet_dir = "optimal_with_suggest_bonus_2",
+        expected_output = AnalysisOutput::new(
+            AnalysisStatus::ApproveWithComment,
+            vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
+        )
+    )
+);
 
 #[test]
 fn reverse_string_analyzer_run_on_every_solution() {
