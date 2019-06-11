@@ -1,6 +1,6 @@
 [package]
 name = "rust-analyzer"
-version = "0.2.1"
+version = "0.2.2"
 edition = "2018"
 description = "Exercism's automated analyzer for the Rust track."
 
@@ -20,3 +20,6 @@ default-features = false
 [dependencies.syn]
 version = "0.15.30"
 features = ["full"]
+
+[dev-dependencies]
+rayon = "1.0.3"

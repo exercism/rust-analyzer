@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use rust_analyzer::{
     analyze_exercise,
     analyzers::{
@@ -98,12 +99,15 @@ analyzer_test_case!(
 fn reverse_string_analyzer_run_on_every_solution() {
     let snippets_dir = Path::new("snippets").join("reverse-string");
     assert!(snippets_dir.exists());
-    snippets_dir
+    assert!(snippets_dir
         .read_dir()
         .expect("Failed to get the directories from the reverse-string snippets directory")
-        .for_each(|solution_dir| {
-            let solution_dir = solution_dir.unwrap();
-            let solution_path = solution_dir.path();
-            assert!(analyze_exercise(REVERSE_STRING_SLUG, solution_path.to_str().unwrap()).is_ok());
-        })
+        .collect::<std::io::Result<Vec<fs::DirEntry>>>()
+        .unwrap()
+        .par_iter()
+        .map(|solution_dir| analyze_exercise(
+            REVERSE_STRING_SLUG,
+            solution_dir.path().to_str().unwrap()
+        ))
+        .all(|analyze_result| analyze_result.is_ok()))
 }
