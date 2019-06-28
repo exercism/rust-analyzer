@@ -1,7 +1,7 @@
 # reverse-string analyzer
 This is the source code for the `reverse-string` analyzer.
 
-## approve_as_optimal
+## approve
 
 ```rust
 use unicode_segmentation::UnicodeSegmentation;
@@ -18,9 +18,6 @@ pub fn reverse(input: &str) -> String {
     input.graphemes(true).rev().collect::<String>()
 }
 ```
-
-
-## approve_with_comment
 
 The following two cases are approved with the `rust.reverse_string.suggest_removing_extern_crate` comment:
 
@@ -58,7 +55,7 @@ pub fn reverse(input: &str) -> String {
 }
 ```
 
-## disapprove_with_comment
+## disapprove
 
 In development
 

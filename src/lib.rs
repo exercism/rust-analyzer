@@ -55,7 +55,7 @@ mod test {
 
     #[test]
     fn analyze_exercise_returns_error_for_the_unknown_slug() {
-        match analyze_exercise("unknown-slug", "snippets/reverse-string/optimal_1") {
+        match analyze_exercise("unknown-slug", "snippets/reverse-string/approve_1") {
             Err(AnalyzerError::InvalidSlugError(_)) => {},
             _ => panic!("analyze_exercise must return the InvalidSlugError variant if the wrong slug is provided"),
         }

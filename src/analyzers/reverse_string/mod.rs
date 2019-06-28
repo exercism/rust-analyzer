@@ -28,13 +28,13 @@ impl<'a> PreparedOutput<'a> {
 
 lazy_static! {
     static ref OPTIMAL_SOLUTION_OUTPUT: AnalysisOutput =
-        AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]);
+        AnalysisOutput::new(AnalysisStatus::Approve, vec![]);
     static ref OPTIMAL_SOLUTION_WITH_EXTERN_CRATE_OUTPUT: AnalysisOutput = AnalysisOutput::new(
-        AnalysisStatus::ApproveWithComment,
+        AnalysisStatus::Approve,
         vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
     );
     static ref OPTIMAL_SOLUTION_WITH_SUGGEST_BONUS_OUTPUT: AnalysisOutput = AnalysisOutput::new(
-        AnalysisStatus::ApproveWithComment,
+        AnalysisStatus::Approve,
         vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
     );
     static ref PREPARED_SOLUTION_OUTPUTS: Vec<PreparedOutput<'static>> = vec![

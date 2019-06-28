@@ -13,9 +13,8 @@ use std::{
 /// The status of the exercise analysis.
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub enum AnalysisStatus {
-    ApproveAsOptimal,
-    ApproveWithComment,
-    DisapproveWithComment,
+    Approve,
+    Disapprove,
     ReferToMentor,
 }
 
@@ -45,9 +44,8 @@ impl Display for AnalysisStatus {
             f,
             "{}",
             match self {
-                ApproveAsOptimal => "approve_as_optimal",
-                ApproveWithComment => "approve_with_comment",
-                DisapproveWithComment => "disapprove_with_comment",
+                Approve => "approve",
+                Disapprove => "disapprove",
                 ReferToMentor => "refer_to_mentor",
             }
         )
