@@ -17,7 +17,7 @@ fn analyze_returns_approve_with_comment_suggest_remove_extern_crate_1() {
         )
         .unwrap(),
         AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
         ),
     );
@@ -31,7 +31,7 @@ fn analyze_returns_approve_with_comment_suggest_remove_extern_crate_2() {
         )
         .unwrap(),
         AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
         ),
     );
@@ -45,7 +45,7 @@ fn analyze_returns_approve_with_comment_suggest_bonus_1() {
         )
         .unwrap(),
         AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         ),
     );
@@ -59,7 +59,7 @@ fn analyze_returns_approve_with_comment_suggest_bonus_2() {
         )
         .unwrap(),
         AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         ),
     );
@@ -71,7 +71,7 @@ fn analyze_returns_approve_as_optimal_1() {
         &syn::parse_str::<File>(
             "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect() }",
         ).unwrap(),
-        AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
+        AnalysisOutput::new(AnalysisStatus::Approve, vec![]),
     );
 }
 
@@ -81,6 +81,6 @@ fn analyze_returns_approve_as_optimal_2() {
         &syn::parse_str::<File>(
             "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect::<String>() }",
         ).unwrap(),
-        AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![]),
+        AnalysisOutput::new(AnalysisStatus::Approve, vec![]),
     );
 }

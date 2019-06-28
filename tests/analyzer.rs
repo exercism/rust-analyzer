@@ -42,13 +42,13 @@ macro_rules! analyzer_test_case {
 analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_1(
     slug = REVERSE_STRING_SLUG,
     snippet_dir = "optimal_1",
-    expected_output = AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![])
+    expected_output = AnalysisOutput::new(AnalysisStatus::Approve, vec![])
 ));
 
 analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_2(
     slug = REVERSE_STRING_SLUG,
     snippet_dir = "optimal_2",
-    expected_output = AnalysisOutput::new(AnalysisStatus::ApproveAsOptimal, vec![])
+    expected_output = AnalysisOutput::new(AnalysisStatus::Approve, vec![])
 ));
 
 analyzer_test_case!(
@@ -56,7 +56,7 @@ analyzer_test_case!(
         slug = REVERSE_STRING_SLUG,
         snippet_dir = "optimal_with_suggest_removing_extern_crate_1",
         expected_output = AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
         )
     )
@@ -67,7 +67,7 @@ analyzer_test_case!(
         slug = REVERSE_STRING_SLUG,
         snippet_dir = "optimal_with_suggest_removing_extern_crate_2",
         expected_output = AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
         )
     )
@@ -78,7 +78,7 @@ analyzer_test_case!(
         slug = REVERSE_STRING_SLUG,
         snippet_dir = "optimal_with_suggest_bonus_1",
         expected_output = AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         )
     )
@@ -89,7 +89,7 @@ analyzer_test_case!(
         slug = REVERSE_STRING_SLUG,
         snippet_dir = "optimal_with_suggest_bonus_2",
         expected_output = AnalysisOutput::new(
-            AnalysisStatus::ApproveWithComment,
+            AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
         )
     )
