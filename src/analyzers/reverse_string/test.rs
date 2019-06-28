@@ -66,7 +66,7 @@ fn analyze_returns_approve_with_comment_suggest_bonus_2() {
 }
 
 #[test]
-fn analyze_returns_approve_as_optimal_1() {
+fn analyze_returns_approve() {
     test_analyzer_output(
         &syn::parse_str::<File>(
             "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect() }",
@@ -76,7 +76,7 @@ fn analyze_returns_approve_as_optimal_1() {
 }
 
 #[test]
-fn analyze_returns_approve_as_optimal_2() {
+fn analyze_returns_approve_2() {
     test_analyzer_output(
         &syn::parse_str::<File>(
             "use unicode_segmentation::UnicodeSegmentation; pub fn reverse(input: &str) -> String { input.graphemes(true).rev().collect::<String>() }",

@@ -39,22 +39,22 @@ macro_rules! analyzer_test_case {
     };
 }
 
-analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_1(
+analyzer_test_case!(reverse_string_analyzer_writes_json_approve_1(
     slug = REVERSE_STRING_SLUG,
-    snippet_dir = "optimal_1",
+    snippet_dir = "approve_1",
     expected_output = AnalysisOutput::new(AnalysisStatus::Approve, vec![])
 ));
 
-analyzer_test_case!(reverse_string_analyzer_writes_json_optimal_2(
+analyzer_test_case!(reverse_string_analyzer_writes_json_approve_2(
     slug = REVERSE_STRING_SLUG,
-    snippet_dir = "optimal_2",
+    snippet_dir = "approve_2",
     expected_output = AnalysisOutput::new(AnalysisStatus::Approve, vec![])
 ));
 
 analyzer_test_case!(
-    reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_comment_1(
+    reverse_string_analyzer_writes_json_approve_with_suggest_removing_extern_crate_comment_1(
         slug = REVERSE_STRING_SLUG,
-        snippet_dir = "optimal_with_suggest_removing_extern_crate_1",
+        snippet_dir = "approve_with_suggest_removing_extern_crate_1",
         expected_output = AnalysisOutput::new(
             AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
@@ -63,9 +63,9 @@ analyzer_test_case!(
 );
 
 analyzer_test_case!(
-    reverse_string_analyzer_writes_json_optimal_with_suggest_removing_extern_crate_comment_2(
+    reverse_string_analyzer_writes_json_approve_with_suggest_removing_extern_crate_comment_2(
         slug = REVERSE_STRING_SLUG,
-        snippet_dir = "optimal_with_suggest_removing_extern_crate_2",
+        snippet_dir = "approve_with_suggest_removing_extern_crate_2",
         expected_output = AnalysisOutput::new(
             AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestRemovingExternCrate.to_string()],
@@ -74,9 +74,9 @@ analyzer_test_case!(
 );
 
 analyzer_test_case!(
-    reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_1(
+    reverse_string_analyzer_writes_json_approve_with_suggest_bonus_1(
         slug = REVERSE_STRING_SLUG,
-        snippet_dir = "optimal_with_suggest_bonus_1",
+        snippet_dir = "approve_with_suggest_bonus_1",
         expected_output = AnalysisOutput::new(
             AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
@@ -85,9 +85,9 @@ analyzer_test_case!(
 );
 
 analyzer_test_case!(
-    reverse_string_analyzer_writes_json_optimal_with_suggest_bonus_2(
+    reverse_string_analyzer_writes_json_approve_with_suggest_bonus_2(
         slug = REVERSE_STRING_SLUG,
-        snippet_dir = "optimal_with_suggest_bonus_2",
+        snippet_dir = "approve_with_suggest_bonus_2",
         expected_output = AnalysisOutput::new(
             AnalysisStatus::Approve,
             vec![ReverseStringComment::SuggestDoingBonusTest.to_string()],
