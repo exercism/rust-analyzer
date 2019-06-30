@@ -95,6 +95,8 @@ analyzer_test_case!(
     )
 );
 
+//TODO: Add an integration test for the case when the reverse-string analyzer returns disapprove
+
 #[test]
 fn reverse_string_analyzer_run_on_every_solution() {
     let snippets_dir = Path::new("snippets").join("reverse-string");
