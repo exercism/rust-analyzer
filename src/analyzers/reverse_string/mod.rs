@@ -14,13 +14,26 @@ use syn::File;
 
 pub struct ReverseStringAnalyzer;
 
-type ReverseStringLint = Box<dyn Fn(&File, AnalysisOutput) -> Result<AnalysisOutput>>;
+type ReverseStringLint = Box<dyn Fn(&File, &mut AnalysisOutput) -> Result<()>>;
 
 /// Generates a vector of the linting functions. Each one of them accepts a reference
 /// to the solution AST and a mutable reference to the analysis output and
 /// modifies the output in accordance to the lint that they represent.
 fn generate_lints() -> Vec<ReverseStringLint> {
-    vec![]
+    vec![Box::new(|ast, output| {
+        if ast.items.iter().any(|item| {
+            if let syn::Item::ExternCrate(_) = item {
+                true
+            } else {
+                false
+            }
+        }) {
+            output
+                .comments
+                .push(ReverseStringComment::SuggestRemovingExternCrate.to_string())
+        }
+        Ok(())
+    })]
 }
 
 /// Checks if the solution AST contains the necessary function
@@ -98,9 +111,10 @@ impl Analyze for ReverseStringAnalyzer {
                 vec![ReverseStringComment::SolutionFunctionNotFound.to_string()],
             ));
         }
-        generate_lints().iter().try_fold(
-            AnalysisOutput::new(AnalysisStatus::ReferToMentor, vec![]),
-            |acc, lint| lint(solution_ast, acc),
-        )
+        let mut analysis_output = AnalysisOutput::new(AnalysisStatus::ReferToMentor, vec![]);
+        generate_lints()
+            .iter()
+            .try_for_each(|lint| lint(solution_ast, &mut analysis_output))
+            .map(|_| analysis_output)
     }
 }
