@@ -20,20 +20,105 @@ type ReverseStringLint = Box<dyn Fn(&File, &mut AnalysisOutput) -> Result<()>>;
 /// to the solution AST and a mutable reference to the analysis output and
 /// modifies the output in accordance to the lint that they represent.
 fn generate_lints() -> Vec<ReverseStringLint> {
-    vec![Box::new(|ast, output| {
-        if ast.items.iter().any(|item| {
-            if let syn::Item::ExternCrate(_) = item {
-                true
-            } else {
-                false
+    vec![
+        Box::new(|ast, output| {
+            let has_extern = ast.items.iter().any(|item| {
+                if let syn::Item::ExternCrate(_) = item {
+                    true
+                } else {
+                    false
+                }
+            });
+            if has_extern {
+                output
+                    .comments
+                    .push(ReverseStringComment::SuggestRemovingExternCrate.to_string());
             }
-        }) {
-            output
-                .comments
-                .push(ReverseStringComment::SuggestRemovingExternCrate.to_string())
-        }
-        Ok(())
-    })]
+            Ok(())
+        }),
+        Box::new(|ast, output| {
+            let reverse_fn = if let Some(syn::Item::Fn(func)) = ast.items.iter().find(|item| {
+                if let syn::Item::Fn(item_fn) = item {
+                    item_fn.ident == "reverse"
+                } else {
+                    false
+                }
+            }) {
+                func
+            } else {
+                // We can use the unreachable!, since we have already check for
+                // the "reverse" function existence at the analyze function.
+                unreachable!();
+            };
+            // Check if the "reverse" function contains the "input.chars().rev().collect()"
+            // solution
+            let has_standard_solution = reverse_fn.block.stmts.iter().any(|stmt| {
+                if let syn::Stmt::Expr(syn::Expr::MethodCall(syn::ExprMethodCall {
+                    method,
+                    receiver,
+                    ..
+                })) = stmt
+                {
+                    if method != "collect" {
+                        false
+                    } else if let syn::Expr::MethodCall(syn::ExprMethodCall {
+                        method,
+                        receiver,
+                        ..
+                    }) = receiver.as_ref()
+                    {
+                        if method != "rev" {
+                            false
+                        } else if let syn::Expr::MethodCall(syn::ExprMethodCall {
+                            method,
+                            receiver,
+                            ..
+                        }) = receiver.as_ref()
+                        {
+                            if method != "chars" {
+                                false
+                            } else if let syn::Expr::Path(syn::ExprPath { path, .. }) =
+                                receiver.as_ref()
+                            {
+                                if let Some(syn::punctuated::Pair::End(path_segment)) =
+                                    path.segments.first()
+                                {
+                                    if let Some(syn::punctuated::Pair::End(syn::FnArg::Captured(
+                                        syn::ArgCaptured {
+                                            pat: syn::Pat::Ident(syn::PatIdent { ident, .. }),
+                                            ..
+                                        },
+                                    ))) = reverse_fn.decl.inputs.first()
+                                    {
+                                        *ident == path_segment.ident
+                                    } else {
+                                        false
+                                    }
+                                } else {
+                                    false
+                                }
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            });
+            if has_standard_solution {
+                output.status = AnalysisStatus::Approve;
+                output
+                    .comments
+                    .push(ReverseStringComment::SuggestDoingBonusTest.to_string())
+            }
+            Ok(())
+        }),
+    ]
 }
 
 /// Checks if the solution AST contains the necessary function
