@@ -201,7 +201,26 @@ fn generate_lints() -> Vec<ReverseStringLint> {
                     false
                 }
             });
-            if has_optimal_solution {
+            let has_use_item = if let Some(syn::Item::Use(syn::ItemUse {
+                tree: syn::UseTree::Path(syn::UsePath { ident, tree, .. }),
+                ..
+            })) = ast.items.iter().find(|item| {
+                if let syn::Item::Use(_) = item {
+                    true
+                } else {
+                    false
+                }
+            }) {
+                ident == "unicode_segmentation"
+                    && if let syn::UseTree::Name(syn::UseName { ident }) = tree.as_ref() {
+                        ident == "UnicodeSegmentation"
+                    } else {
+                        false
+                    }
+            } else {
+                false
+            };
+            if has_optimal_solution && has_use_item {
                 output.status = AnalysisStatus::Approve;
             }
             Ok(())
