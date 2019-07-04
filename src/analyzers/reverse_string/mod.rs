@@ -118,6 +118,94 @@ fn generate_lints() -> Vec<ReverseStringLint> {
             }
             Ok(())
         }),
+        Box::new(|ast, output| {
+            let reverse_fn = if let Some(syn::Item::Fn(func)) = ast.items.iter().find(|item| {
+                if let syn::Item::Fn(item_fn) = item {
+                    item_fn.ident == "reverse"
+                } else {
+                    false
+                }
+            }) {
+                func
+            } else {
+                // We can use the unreachable!, since we have already check for
+                // the "reverse" function existence at the analyze function.
+                unreachable!();
+            };
+            // Check if the "reverse" function contains the "input.graphemes(true).rev().collect()"
+            // solution
+            let has_optimal_solution = reverse_fn.block.stmts.iter().any(|stmt| {
+                if let syn::Stmt::Expr(syn::Expr::MethodCall(syn::ExprMethodCall {
+                    method,
+                    receiver,
+                    ..
+                })) = stmt
+                {
+                    if method != "collect" {
+                        false
+                    } else if let syn::Expr::MethodCall(syn::ExprMethodCall {
+                        method,
+                        receiver,
+                        ..
+                    }) = receiver.as_ref()
+                    {
+                        if method != "rev" {
+                            false
+                        } else if let syn::Expr::MethodCall(syn::ExprMethodCall {
+                            method,
+                            receiver,
+                            args,
+                            ..
+                        }) = receiver.as_ref()
+                        {
+                            if method != "graphemes" {
+                                false
+                            } else if let Some(syn::punctuated::Pair::End(syn::Expr::Lit(
+                                syn::ExprLit {
+                                    lit: syn::Lit::Bool(syn::LitBool { value, .. }),
+                                    ..
+                                },
+                            ))) = args.first()
+                            {
+                                *value
+                            } else if let syn::Expr::Path(syn::ExprPath { path, .. }) =
+                                receiver.as_ref()
+                            {
+                                if let Some(syn::punctuated::Pair::End(path_segment)) =
+                                    path.segments.first()
+                                {
+                                    if let Some(syn::punctuated::Pair::End(syn::FnArg::Captured(
+                                        syn::ArgCaptured {
+                                            pat: syn::Pat::Ident(syn::PatIdent { ident, .. }),
+                                            ..
+                                        },
+                                    ))) = reverse_fn.decl.inputs.first()
+                                    {
+                                        *ident == path_segment.ident
+                                    } else {
+                                        false
+                                    }
+                                } else {
+                                    false
+                                }
+                            } else {
+                                false
+                            }
+                        } else {
+                            false
+                        }
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            });
+            if has_optimal_solution {
+                output.status = AnalysisStatus::Approve;
+            }
+            Ok(())
+        }),
     ]
 }
 
