@@ -95,7 +95,16 @@ analyzer_test_case!(
     )
 );
 
-//TODO: Add an integration test for the case when the reverse-string analyzer returns disapprove
+analyzer_test_case!(
+    reverse_string_analyzer_writes_json_disapprove_with_solution_not_found(
+        slug = REVERSE_STRING_SLUG,
+        snippet_dir = "disapprove_with_solution_not_found",
+        expected_output = AnalysisOutput::new(
+            AnalysisStatus::Disapprove,
+            vec![ReverseStringComment::SolutionFunctionNotFound.to_string()],
+        )
+    )
+);
 
 #[test]
 fn reverse_string_analyzer_run_on_every_solution() {
