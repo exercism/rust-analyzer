@@ -57,7 +57,13 @@ pub fn reverse(input: &str) -> String {
 
 ## disapprove
 
-In development
+If the solution does not contain a properly defined `reverse` function it will be disapproved with the `eust.reverse_string.solution_function_not_found` comment:
+
+```rust
+fn main() {
+    println!("Test");
+}
+```
 
 ## refer_to_mentor
 
