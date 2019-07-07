@@ -21,8 +21,8 @@ pub enum AnalysisStatus {
 /// The result of the exercise analysis.
 #[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct AnalysisOutput {
-    status: AnalysisStatus,
-    comments: Vec<String>,
+    pub status: AnalysisStatus,
+    pub comments: Vec<String>,
 }
 
 impl AnalysisOutput {

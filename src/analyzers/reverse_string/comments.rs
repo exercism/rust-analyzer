@@ -6,6 +6,7 @@ use std::fmt::{self, Display};
 pub enum ReverseStringComment {
     SuggestRemovingExternCrate,
     SuggestDoingBonusTest,
+    SolutionFunctionNotFound,
 }
 
 impl Display for ReverseStringComment {
@@ -17,6 +18,7 @@ impl Display for ReverseStringComment {
             match self {
                 SuggestRemovingExternCrate => "rust.reverse_string.suggest_removing_extern_crate",
                 SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
+                SolutionFunctionNotFound => "rust.reverse_string.solution_function_not_found",
             }
         )
     }
