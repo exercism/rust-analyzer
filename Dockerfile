@@ -1,4 +1,4 @@
-FROM rust:1.35-stretch as base
+FROM rust:1.36-stretch as base
 
 WORKDIR /analyzer
 
