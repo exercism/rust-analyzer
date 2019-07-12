@@ -9,16 +9,19 @@ pub enum ReverseStringComment {
     SolutionFunctionNotFound,
 }
 
+const REVERSE_STRING_COMMENT_PREFIX: &str = "rust.reverse-string";
+
 impl Display for ReverseStringComment {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use ReverseStringComment::*;
         write!(
             f,
-            "{}",
+            "{}.{}",
+            REVERSE_STRING_COMMENT_PREFIX,
             match self {
-                SuggestRemovingExternCrate => "rust.reverse_string.suggest_removing_extern_crate",
-                SuggestDoingBonusTest => "rust.reverse_string.suggest_doing_bonus_test",
-                SolutionFunctionNotFound => "rust.reverse_string.solution_function_not_found",
+                SuggestRemovingExternCrate => "suggest_removing_extern_crate",
+                SuggestDoingBonusTest => "suggest_doing_bonus_test",
+                SolutionFunctionNotFound => "solution_function_not_found",
             }
         )
     }
