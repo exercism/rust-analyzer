@@ -3,8 +3,7 @@ pub mod errors;
 use analyzers::{
     comments::GeneralComment,
     output::{AnalysisOutput, AnalysisStatus},
-    Analyze,
-    ReverseStringAnalyzer,
+    Analyze, ReverseStringAnalyzer,
 };
 
 use analyzers::gigasecond::GigasecondAnalyzer;

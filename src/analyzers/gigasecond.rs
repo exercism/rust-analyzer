@@ -47,16 +47,30 @@ macro_rules! missing {
     };
 }
 
-const LITERALS_WITH_UNDERSCORE: &str = "Excellent use of '_' to keep the number readable.";
+const LITERALS_WITH_UNDERSCORE: &str =
+    "I like the large numeric is formatted with underscores to be more readable.";
+const PLUS_OP_USED: &str = "I like this solution directly adds `Duration` to `start` with the `+` \
+    operator.";
 
 pub static LINTS: &[fn(&str) -> Option<(i32, String)>] = &[
     good!("1_000_000_000" => LITERALS_WITH_UNDERSCORE),
+    good!("start +" => PLUS_OP_USED),
     good!("start + Duration::seconds(1_000_000_000)" => "Perfect!"),
-    bad!(".pow(" => "Rather than using `.pow`, rust number literals can have `_` in them to make them more readable, for example: `1_000`. (This also avoids the cast)"),
+    bad!(".pow(" => "Rather than using `.pow`, rust number literals can have `_` in them to make \
+    them more readable, for example: `1_000`. (This also avoids the cast)"),
     bad!("Utc.timestamp(" => "This could be simplified to `start + Duration::seconds`."),
     bad!("start.add(" => "Did you know that the `+` operator works for DateTime?"),
-    bad!("use chrono::{DateTime, Utc, Duration};" => "(don't forget to use cargo fmt)"),
-    missing!("_" => "Did you know that rust number literals can have `_` in them to make them more readable? For example: `1_000`"),
+    bad!("use chrono::{DateTime, Utc, Duration};" => "A minor style point is that usually `rustfmt` \
+    will usually put `use` elements in alphabetical order. In larger programs with a lot of `use` statements it can be helpful to have them ordered alphabetically."),
+    bad!("checked_add_signed" => "You don't need to use the `checked_add_signed` method of \
+    `DateTime<Utc>` since you have to `unwrap` its output `Option` value anyway. \
+    What you can do instead is to use the `Add` implementation for `DateTime<Utc>`, \
+    meaning `+` can be directly used between `start` and `Duration::seconds(1_000_000_000)` \
+    in order to get the desired return value."),
+    missing!("_" => "Did you know that rust number literals can have `_` in them to make \
+    them more readable? For example: `1_000`"),
+    missing!(";" => "I like the expression is directly returned instead of being set to a binding \
+    and returning the binding or using return and a semicolon."),
 ];
 
 impl Analyze for GigasecondAnalyzer {
@@ -121,8 +135,8 @@ pub fn after(start: DateTime<Utc>) -> DateTime<Utc> {
             &syn::parse_str::<File>(solution).unwrap(),
             solution,
             AnalysisOutput::new(
-                AnalysisStatus::ReferToMentor,
-                vec![LITERALS_WITH_UNDERSCORE.to_string()],
+                AnalysisStatus::Approve,
+                vec![LITERALS_WITH_UNDERSCORE.to_string(), PLUS_OP_USED.to_string()],
             ),
         );
     }
