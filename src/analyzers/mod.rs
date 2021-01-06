@@ -6,6 +6,7 @@
 pub mod comments;
 pub mod output;
 pub mod reverse_string;
+pub mod gigasecond;
 use crate::Result;
 use output::AnalysisOutput;
 pub use reverse_string::ReverseStringAnalyzer;
@@ -15,5 +16,5 @@ use syn::File;
 /// Should be implemented by every exercise analyzer.
 pub trait Analyze {
     /// Tries to analyze the solution AST provided by the `solution_ast` argument.
-    fn analyze(&self, solution_ast: &File) -> Result<AnalysisOutput>;
+    fn analyze(&self, solution_ast: &File, solution_raw: &str) -> Result<AnalysisOutput>;
 }

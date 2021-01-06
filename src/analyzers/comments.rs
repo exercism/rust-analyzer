@@ -4,6 +4,7 @@
 use std::fmt::{self, Display};
 
 pub enum GeneralComment {
+    SolutionFunctionNotFound,
     SolutionFileNotFound,
     FailedToParseSolutionFile,
 }
@@ -16,6 +17,7 @@ impl Display for GeneralComment {
             "{}",
             match self {
                 SolutionFileNotFound => "rust.general.solution_file_not_found",
+                SolutionFunctionNotFound => "rust.general.solution_function_not_found",
                 FailedToParseSolutionFile => "rust.general.failed_to_parse_solution_file",
             }
         )
