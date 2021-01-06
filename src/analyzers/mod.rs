@@ -4,9 +4,9 @@
 //! The tests for each of the analyzer are located in the `exercise_slug/test.rs` file.
 
 pub mod comments;
+pub mod gigasecond;
 pub mod output;
 pub mod reverse_string;
-pub mod gigasecond;
 use crate::Result;
 use output::AnalysisOutput;
 pub use reverse_string::ReverseStringAnalyzer;

@@ -21,7 +21,10 @@ pub static REVERSE_STRING_LINTS: &[fn(&File, &mut AnalysisOutput) -> Result<()>]
 ];
 
 fn check_for_extern_crate(ast: &File, output: &mut AnalysisOutput) -> Result<()> {
-    let has_extern = ast.items.iter().any(|item| matches!(item, syn::Item::ExternCrate(_)));
+    let has_extern = ast
+        .items
+        .iter()
+        .any(|item| matches!(item, syn::Item::ExternCrate(_)));
     if has_extern {
         output
             .comments
@@ -187,9 +190,11 @@ fn check_for_optimal_solution(ast: &File, output: &mut AnalysisOutput) -> Result
     let has_use_item = if let Some(syn::Item::Use(syn::ItemUse {
         tree: syn::UseTree::Path(syn::UsePath { ident, tree, .. }),
         ..
-    })) = ast.items.iter().find(|item| {
-        matches!(item, syn::Item::Use(_))
-    }) {
+    })) = ast
+        .items
+        .iter()
+        .find(|item| matches!(item, syn::Item::Use(_)))
+    {
         ident == "unicode_segmentation"
             && if let syn::UseTree::Name(syn::UseName { ident }) = tree.as_ref() {
                 ident == "UnicodeSegmentation"
