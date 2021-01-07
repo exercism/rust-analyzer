@@ -1,3 +1,4 @@
+#[macro_use]
 pub mod analyzers;
 pub mod errors;
 use analyzers::{

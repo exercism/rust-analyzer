@@ -1,51 +1,8 @@
-use super::comments::GeneralComment;
-use crate::{
-    analyzers::{
-        output::{AnalysisOutput, AnalysisStatus},
-        Analyze,
-    },
-    Result,
-};
-
+use crate::analyzers::comments::GeneralComment;
+use crate::analyzers::output::{AnalysisOutput, AnalysisStatus};
+use crate::analyzers::Analyze;
+use crate::Result;
 use syn::File;
-
-pub struct GigasecondAnalyzer;
-
-macro_rules! good {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if src.contains($find) {
-                Some((1, $result.to_string()))
-            } else {
-                None
-            }
-        }
-    };
-}
-
-macro_rules! bad {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if src.contains($find) {
-                Some((-1, $result.to_string()))
-            } else {
-                None
-            }
-        }
-    };
-}
-
-macro_rules! missing {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if !src.contains($find) {
-                Some((-1, $result.to_string()))
-            } else {
-                None
-            }
-        }
-    };
-}
 
 const LITERALS_WITH_UNDERSCORE: &str =
     "I like the large numeric is formatted with underscores to be more readable.";
@@ -73,38 +30,21 @@ pub static LINTS: &[fn(&str) -> Option<(i32, String)>] = &[
     and returning the binding or using return and a semicolon."),
 ];
 
+pub struct GigasecondAnalyzer;
+
 impl Analyze for GigasecondAnalyzer {
     fn analyze(&self, _solution_ast: &File, solution_raw: &str) -> Result<AnalysisOutput> {
         const METHOD: &str = "after(";
         // Check if the function is present, before
         // running any lints on the solution.
-        let source = solution_raw;
-        if !source.contains(METHOD) {
-            return Ok(AnalysisOutput::new(
+        if !solution_raw.contains(METHOD) {
+            Ok(AnalysisOutput::new(
                 AnalysisStatus::Disapprove,
                 vec![GeneralComment::SolutionFunctionNotFound.to_string()],
-            ));
-        }
-
-        let mut analysis: Vec<(i32, String)> =
-            LINTS.iter().filter_map(|lint| lint(solution_raw)).collect();
-        let score: i32 = analysis.iter().map(|(score, _)| score).sum();
-        analysis.sort_by_key(|(score, _)| *score);
-
-        let status = if score > 1 {
-            AnalysisStatus::Approve
-        } else if score < -1 {
-            AnalysisStatus::Disapprove
+            ))
         } else {
-            AnalysisStatus::ReferToMentor
-        };
-        Ok(AnalysisOutput {
-            status,
-            comments: analysis
-                .into_iter()
-                .map(|(_, comment)| comment)
-                .collect::<Vec<_>>(),
-        })
+            self.run_lints(solution_raw, LINTS, 1)
+        }
     }
 }
 
@@ -136,7 +76,10 @@ pub fn after(start: DateTime<Utc>) -> DateTime<Utc> {
             solution,
             AnalysisOutput::new(
                 AnalysisStatus::Approve,
-                vec![LITERALS_WITH_UNDERSCORE.to_string(), PLUS_OP_USED.to_string()],
+                vec![
+                    PLUS_OP_USED.to_string(),
+                    LITERALS_WITH_UNDERSCORE.to_string(),
+                ],
             ),
         );
     }
