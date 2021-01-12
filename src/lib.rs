@@ -1,12 +1,15 @@
 #[macro_use]
 pub mod analyzers;
 pub mod errors;
+pub mod prelude;
+
 use analyzers::{
     comments::GeneralComment,
     output::{AnalysisOutput, AnalysisStatus},
     Analyze, ReverseStringAnalyzer,
 };
 
+use analyzers::clock::ClockAnalyzer;
 use analyzers::gigasecond::GigasecondAnalyzer;
 use errors::AnalyzerError;
 use std::{fs, path::Path};
@@ -18,6 +21,7 @@ pub type Result<T> = std::result::Result<T, AnalyzerError>;
 fn get_analyzer(slug: &str) -> Result<&dyn Analyze> {
     match slug {
         "reverse-string" => Ok(&ReverseStringAnalyzer),
+        "clock" => Ok(&ClockAnalyzer),
         "gigasecond" => Ok(&GigasecondAnalyzer),
         _ => Err(AnalyzerError::InvalidSlugError(slug.to_string())),
     }
