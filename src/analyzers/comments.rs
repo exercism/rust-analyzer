@@ -18,7 +18,7 @@ impl Display for GeneralComment {
             match self {
                 SolutionFileNotFound => "No lib.rs file was submitted?",
                 SolutionFunctionNotFound =>
-                    "The initial method could not be found. \
+                    "The solution method could not be found. \
                 Have given methods been renamed?",
                 FailedToParseSolutionFile => "The sollution could not be parsed.",
             }
