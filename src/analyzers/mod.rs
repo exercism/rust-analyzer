@@ -119,8 +119,7 @@ pub trait Analyze {
             let mut analysis: Vec<(i32, String)> =
                 lints.iter().filter_map(|lint| lint(solution_raw)).collect();
             let score: i32 = analysis.iter().map(|(score, _)| score).sum();
-            analysis.sort_by_key(|(score, _)| *score);
-            analysis.reverse();
+            analysis.sort_by_key(|(score, _)| -*score);
 
             let status = if score > pass_threshold {
                 AnalysisStatus::Approve
