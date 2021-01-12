@@ -10,7 +10,7 @@ const DERIVE_DEBUG: &str = "Debug can be derived automatically (`#[derive(Debug)
 
 const REM_EUCLID: &str =
     "Alternatively to `%` and `/` you can use `rem_euclid` and `div_euclid` which \
-    (differ)[https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=617965fa5096580c67b809e0bc786917] \
+    [differ](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=617965fa5096580c67b809e0bc786917) \
     when negatives are involved.";
 
 const SUGGEST_IMPL_DISPLAY: &str = "Rather than `impl ToString` \
