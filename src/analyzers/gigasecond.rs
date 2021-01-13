@@ -19,11 +19,12 @@ const HINT_LITERAL_SEPARATERS: &str = "Did you know that rust number literals ca
     them to make them more readable? For example: `1_000`";
 const GOOD_NO_RETURN_STATEMENT: &str = "I like that the expression is directly returned instead \
     of being set to a binding and returning the binding or using return and a semicolon.";
+const PERFECT: &str = "Perfect";
 
 pub static LINTS: &[Lint] = &[
     good!("1_000_000_000" => LITERALS_WITH_UNDERSCORE),
     good!("start +" => PLUS_OP_USED),
-    good!("start + Duration::seconds(1_000_000_000)" => "Perfect!"),
+    good!("start + Duration::seconds(1_000_000_000)" => PERFECT),
     bad!(".pow(" => PREFER_LITERAL),
     bad!("Utc.timestamp(" => SUGGEST_ADD),
     bad!("start.add(" => SUGGEST_OP),
