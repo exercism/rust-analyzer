@@ -20,7 +20,7 @@ impl Display for GeneralComment {
                 SolutionFunctionNotFound =>
                     "The solution method could not be found. \
                 Have given methods been renamed?",
-                FailedToParseSolutionFile => "The sollution could not be parsed.",
+                FailedToParseSolutionFile => "The solution could not be parsed.",
             }
         )
     }
