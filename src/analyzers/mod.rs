@@ -5,81 +5,69 @@
 
 // Macros for defining rules
 macro_rules! rule {
-    ($points:expr, $find:tt => $result:expr) => {
-        |src: &str| {if src.contains($find) {
+    ($points:expr, $($find:literal)|+ => $result:expr) => {
+        |src: &str| {if $(src.contains($find))||+ {
             Some(($points, $result.to_string()))
         } else {
             None
-        }}
-    };
-    ($points:expr, $find:tt | $($findmore:tt)|+ => $result:expr) => {
-        |src: &str| {if src.contains($find) {
-            Some(($points, $result.to_string()))
-        } else {
-            rule!($points, $($findmore)|+ => $result)(src)
         }}
     };
 }
 
 macro_rules! not_rule {
-    ($points:expr, $find:tt => $result:expr) => {
-        |src: &str| {if src.contains($find) {
-            None
-        } else {
+    ($points:expr, $($find:literal)|+ => $result:expr) => {
+        |src: &str| {if $(!src.contains($find))&&+ {
             Some(($points, $result.to_string()))
-        }}
-    };
-    ($points:expr, $find:tt | $($findmore:tt)|+ => $result:expr) => {
-        |src: &str| {if src.contains($find) {
-            None
         } else {
-            not_rule!($points, $($findmore)|+ => $result)(src)
+            None
         }}
     };
 }
 
 #[macro_export]
 macro_rules! good {
-    ($($findmore:tt)|+ => $result:expr) => {
-        rule!(1, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        rule!(1, $($find)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! bad {
-    ($($findmore:tt)|+ => $result:expr) => {
-        rule!(-1, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        rule!(-1, $($find)|+ => $result)
     };
 }
 
 /// Notes are neither good nor bad, and don't change the score.
 #[macro_export]
 macro_rules! note {
-    ($($findmore:tt)|+ => $result:expr) => {
-        rule!(0, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        rule!(0, $($find)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! good_if_missing {
-    ($($findmore:tt)|+ => $result:expr) => {
-        not_rule!(1, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        not_rule!(1, $($find)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! bad_if_missing {
-    ($($findmore:tt)|+ => $result:expr) => {
-        not_rule!(-1, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        not_rule!(-1, $($find)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! note_if_missing {
-    ($($findmore:tt)|+ => $result:expr) => {
-        not_rule!(0, $($findmore)|+ => $result)
+    ($($find:literal)|+ => $result:expr) => {
+        not_rule!(0, $($find)|+ => $result)
     };
 }
+
+pub type Lint = fn(&str) -> Option<(i32, String)>;
 
 pub mod comments;
 

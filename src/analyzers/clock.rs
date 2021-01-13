@@ -24,7 +24,7 @@ const IMPROVE_FORMAT_STRING: &str = "Have a look at \
     for a more succinct way to format the number.";
 
 // Order here will be order displayed in to user.
-pub static LINTS: &[fn(&str) -> Option<(i32, String)>] = &[
+pub static LINTS: &[Lint] = &[
     good!("Display for Clock" => IMPL_DISPLAY),
     good!("rem_euclid" => CELEBRATE_REM_EUCLID),
     bad_if_missing!(":02" | ":0>2" | ":>02" => IMPROVE_FORMAT_STRING),

@@ -9,7 +9,8 @@ const PREFER_LITERAL: &'static str = "Rather than using `.pow`, rust number lite
     `_` in them to make them more readable, for example: `1_000`. (This also avoids the cast)";
 const SUGGEST_ADD: &'static str = "This could be simplified to `start + Duration::seconds`.";
 const SUGGEST_OP: &'static str = "Did you know that the `+` operator works for DateTime?";
-pub static LINTS: &[fn(&str) -> Option<(i32, String)>] = &[
+
+pub static LINTS: &[Lint] = &[
     good!("1_000_000_000" => LITERALS_WITH_UNDERSCORE),
     good!("start +" => PLUS_OP_USED),
     good!("start + Duration::seconds(1_000_000_000)" => "Perfect!"),
