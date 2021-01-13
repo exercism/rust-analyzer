@@ -65,8 +65,8 @@ pub fn after(start: DateTime<Utc>) -> DateTime<Utc> {
             AnalysisOutput::new(
                 AnalysisStatus::Approve,
                 vec![
-                    PLUS_OP_USED.to_string(),
                     LITERALS_WITH_UNDERSCORE.to_string(),
+                    PLUS_OP_USED.to_string(),
                 ],
             ),
         );

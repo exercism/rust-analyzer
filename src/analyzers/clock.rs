@@ -23,10 +23,11 @@ const IMPROVE_FORMAT_STRING: &str = "Have a look at \
     [std::fmt](https://doc.rust-lang.org/std/fmt/#width) \
     for a more succinct way to format the number.";
 
+// Order here will be order displayed in to user.
 pub static LINTS: &[fn(&str) -> Option<(i32, String)>] = &[
     good!("Display for Clock" => IMPL_DISPLAY),
     good!("rem_euclid" => CELEBRATE_REM_EUCLID),
-    bad_if_missing!("2}:{:0" => IMPROVE_FORMAT_STRING),
+    bad_if_missing!(":02" | ":0>2" | ":>02" => IMPROVE_FORMAT_STRING),
     bad!("Debug for Clock" => DERIVE_DEBUG),
     bad!("PartialEq for Clock" => DERIVE_PARTIAL_EQ),
     bad!("ToString for Clock" => SUGGEST_IMPL_DISPLAY),
@@ -107,9 +108,9 @@ impl Clock {
                 AnalysisStatus::ReferToMentor,
                 vec![
                     IMPL_DISPLAY.into(),
-                    JUST_STORE_MINUTES.into(),
-                    REM_EUCLID.to_string(),
                     DERIVE_PARTIAL_EQ.into(),
+                    REM_EUCLID.to_string(),
+                    JUST_STORE_MINUTES.into(),
                 ],
             ),
         );

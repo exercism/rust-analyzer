@@ -4,82 +4,80 @@
 //! The tests for each of the analyzer are located in the `exercise_slug/test.rs` file.
 
 // Macros for defining rules
+macro_rules! rule {
+    ($points:expr, $find:tt => $result:expr) => {
+        |src: &str| {if src.contains($find) {
+            Some(($points, $result.to_string()))
+        } else {
+            None
+        }}
+    };
+    ($points:expr, $find:tt | $($findmore:tt)|+ => $result:expr) => {
+        |src: &str| {if src.contains($find) {
+            Some(($points, $result.to_string()))
+        } else {
+            rule!($points, $($findmore)|+ => $result)(src)
+        }}
+    };
+}
+
+macro_rules! not_rule {
+    ($points:expr, $find:tt => $result:expr) => {
+        |src: &str| {if src.contains($find) {
+            None
+        } else {
+            Some(($points, $result.to_string()))
+        }}
+    };
+    ($points:expr, $find:tt | $($findmore:tt)|+ => $result:expr) => {
+        |src: &str| {if src.contains($find) {
+            None
+        } else {
+            not_rule!($points, $($findmore)|+ => $result)(src)
+        }}
+    };
+}
+
 #[macro_export]
 macro_rules! good {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if src.contains($find) {
-                Some((1, $result.to_string()))
-            } else {
-                None
-            }
-        }
+    ($($findmore:tt)|+ => $result:expr) => {
+        rule!(1, $($findmore)|+ => $result)
+    };
+}
+
+#[macro_export]
+macro_rules! bad {
+    ($($findmore:tt)|+ => $result:expr) => {
+        rule!(-1, $($findmore)|+ => $result)
     };
 }
 
 /// Notes are neither good nor bad, and don't change the score.
 #[macro_export]
 macro_rules! note {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if src.contains($find) {
-                Some((0, $result.to_string()))
-            } else {
-                None
-            }
-        }
-    };
-}
-
-#[macro_export]
-macro_rules! bad {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if src.contains($find) {
-                Some((-1, $result.to_string()))
-            } else {
-                None
-            }
-        }
+    ($($findmore:tt)|+ => $result:expr) => {
+        rule!(0, $($findmore)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! good_if_missing {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if !src.contains($find) {
-                Some((1, $result.to_string()))
-            } else {
-                None
-            }
-        }
+    ($($findmore:tt)|+ => $result:expr) => {
+        not_rule!(1, $($findmore)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! bad_if_missing {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if !src.contains($find) {
-                Some((-1, $result.to_string()))
-            } else {
-                None
-            }
-        }
+    ($($findmore:tt)|+ => $result:expr) => {
+        not_rule!(-1, $($findmore)|+ => $result)
     };
 }
 
 #[macro_export]
 macro_rules! note_if_missing {
-    ($find:expr => $result:expr) => {
-        |src| {
-            if !src.contains($find) {
-                Some((0, $result.to_string()))
-            } else {
-                None
-            }
-        }
+    ($($findmore:tt)|+ => $result:expr) => {
+        not_rule!(0, $($findmore)|+ => $result)
     };
 }
 
@@ -116,10 +114,9 @@ pub trait Analyze {
                 vec![GeneralComment::SolutionFunctionNotFound.to_string()],
             ))
         } else {
-            let mut analysis: Vec<(i32, String)> =
+            let analysis: Vec<(i32, String)> =
                 lints.iter().filter_map(|lint| lint(solution_raw)).collect();
             let score: i32 = analysis.iter().map(|(score, _)| score).sum();
-            analysis.sort_by_key(|(score, _)| -*score);
 
             let status = if score > pass_threshold {
                 AnalysisStatus::Approve
