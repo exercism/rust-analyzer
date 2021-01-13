@@ -10,6 +10,16 @@ const PREFER_LITERAL: &'static str = "Rather than using `.pow`, rust number lite
 const SUGGEST_ADD: &'static str = "This could be simplified to `start + Duration::seconds`.";
 const SUGGEST_OP: &'static str = "Did you know that the `+` operator works for DateTime?";
 
+const RUST_FMT: &'static str = "A minor style point is that usually \
+    `rustfmt` will usually put `use` elements in alphabetical order. In larger programs with \
+    a lot of `use` statements it can be helpful to have them ordered alphabetically.";
+const GOOD_FOCUS_ON_OVERFLOW: &str = "Good idea considering overflow conditions by using \
+    `checked_add_signed` method of `DateTime<Utc>`.";
+const HINT_LITERAL_SEPARATERS: &str = "Did you know that rust number literals can have `_` in \
+    them to make them more readable? For example: `1_000`";
+const GOOD_NO_RETURN_STATEMENT: &str = "I like that the expression is directly returned instead \
+    of being set to a binding and returning the binding or using return and a semicolon.";
+
 pub static LINTS: &[Lint] = &[
     good!("1_000_000_000" => LITERALS_WITH_UNDERSCORE),
     good!("start +" => PLUS_OP_USED),
@@ -17,15 +27,10 @@ pub static LINTS: &[Lint] = &[
     bad!(".pow(" => PREFER_LITERAL),
     bad!("Utc.timestamp(" => SUGGEST_ADD),
     bad!("start.add(" => SUGGEST_OP),
-    note!("use chrono::{DateTime, Utc, Duration};" => "A minor style point is that usually \
-    `rustfmt` will usually put `use` elements in alphabetical order. In larger programs with \
-    a lot of `use` statements it can be helpful to have them ordered alphabetically."),
-    good!("checked_add_signed" => "Good idea considering overflow conditions by using \
-    `checked_add_signed` method of `DateTime<Utc>`."),
-    bad_if_missing!("_" => "Did you know that rust number literals can have `_` in them to make \
-    them more readable? For example: `1_000`"),
-    good_if_missing!(";" => "I like the expression is directly returned instead of being set \
-    to a binding and returning the binding or using return and a semicolon."),
+    note!("use chrono::{DateTime, Utc, Duration};" => RUST_FMT),
+    good!("checked_add_signed" => GOOD_FOCUS_ON_OVERFLOW),
+    bad_if_missing!("_" => HINT_LITERAL_SEPARATERS),
+    good_if_missing!(";" => GOOD_NO_RETURN_STATEMENT),
 ];
 
 pub struct GigasecondAnalyzer;
