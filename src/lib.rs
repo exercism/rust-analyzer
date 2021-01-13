@@ -1,10 +1,16 @@
+#[macro_use]
 pub mod analyzers;
 pub mod errors;
+pub mod prelude;
+
 use analyzers::{
     comments::GeneralComment,
     output::{AnalysisOutput, AnalysisStatus},
     Analyze, ReverseStringAnalyzer,
 };
+
+use analyzers::clock::ClockAnalyzer;
+use analyzers::gigasecond::GigasecondAnalyzer;
 use errors::AnalyzerError;
 use std::{fs, path::Path};
 
@@ -15,6 +21,8 @@ pub type Result<T> = std::result::Result<T, AnalyzerError>;
 fn get_analyzer(slug: &str) -> Result<&dyn Analyze> {
     match slug {
         "reverse-string" => Ok(&ReverseStringAnalyzer),
+        "clock" => Ok(&ClockAnalyzer),
+        "gigasecond" => Ok(&GigasecondAnalyzer),
         _ => Err(AnalyzerError::InvalidSlugError(slug.to_string())),
     }
 }
@@ -34,15 +42,18 @@ pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
             AnalysisStatus::ReferToMentor,
             vec![GeneralComment::FailedToParseSolutionFile.to_string()],
         )
-    } else if let Ok(solution_ast) = syn::parse_file(&fs::read_to_string(solution_file_path)?) {
-        // Solution file exists and can be parsed by syn => run analysis
-        get_analyzer(slug)?.analyze(&solution_ast)?
     } else {
-        // Solution file could not be parsed by syn => refer to mentor
-        AnalysisOutput::new(
-            AnalysisStatus::ReferToMentor,
-            vec![GeneralComment::FailedToParseSolutionFile.to_string()],
-        )
+        let source = &fs::read_to_string(solution_file_path)?;
+        if let Ok(solution_ast) = syn::parse_file(&source) {
+            // Solution file exists and can be parsed by syn => run analysis
+            get_analyzer(slug)?.analyze(&solution_ast, source)?
+        } else {
+            // Solution file could not be parsed by syn => refer to mentor
+            AnalysisOutput::new(
+                AnalysisStatus::ReferToMentor,
+                vec![GeneralComment::FailedToParseSolutionFile.to_string()],
+            )
+        }
     };
     analysis_output.write(&solution_dir_path.join("analysis.json"))?;
     Ok(())

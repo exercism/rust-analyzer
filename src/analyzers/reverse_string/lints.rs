@@ -14,20 +14,17 @@ use crate::{
 
 use syn::File;
 
-pub static REVERSE_STRING_LINTS: &'static [fn(&File, &mut AnalysisOutput) -> Result<()>] = &[
+pub static REVERSE_STRING_LINTS: &[fn(&File, &mut AnalysisOutput) -> Result<()>] = &[
     check_for_extern_crate,
     check_for_standard_solution,
     check_for_optimal_solution,
 ];
 
 fn check_for_extern_crate(ast: &File, output: &mut AnalysisOutput) -> Result<()> {
-    let has_extern = ast.items.iter().any(|item| {
-        if let syn::Item::ExternCrate(_) = item {
-            true
-        } else {
-            false
-        }
-    });
+    let has_extern = ast
+        .items
+        .iter()
+        .any(|item| matches!(item, syn::Item::ExternCrate(_)));
     if has_extern {
         output
             .comments
@@ -193,13 +190,11 @@ fn check_for_optimal_solution(ast: &File, output: &mut AnalysisOutput) -> Result
     let has_use_item = if let Some(syn::Item::Use(syn::ItemUse {
         tree: syn::UseTree::Path(syn::UsePath { ident, tree, .. }),
         ..
-    })) = ast.items.iter().find(|item| {
-        if let syn::Item::Use(_) = item {
-            true
-        } else {
-            false
-        }
-    }) {
+    })) = ast
+        .items
+        .iter()
+        .find(|item| matches!(item, syn::Item::Use(_)))
+    {
         ident == "unicode_segmentation"
             && if let syn::UseTree::Name(syn::UseName { ident }) = tree.as_ref() {
                 ident == "UnicodeSegmentation"

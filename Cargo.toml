@@ -21,4 +21,4 @@ version = "0.15.30"
 features = ["full"]
 
 [dev-dependencies]
-rayon = "1.0.3"
+rayon = "1.5"

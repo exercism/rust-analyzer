@@ -4,7 +4,7 @@ use syn::File;
 
 fn test_analyzer_output(solution_ast: &File, expected: AnalysisOutput) {
     assert_eq!(
-        ReverseStringAnalyzer.analyze(solution_ast).ok(),
+        ReverseStringAnalyzer.analyze(solution_ast, "").ok(),
         Some(expected)
     )
 }

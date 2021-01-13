@@ -33,11 +33,8 @@ fn solution_contains_neccesary_fn(ast: &File) -> bool {
     } else {
         return false;
     };
-    let solution_fn_is_public = if let syn::Visibility::Public(_) = solution_fn.vis {
-        true
-    } else {
-        false
-    };
+    let solution_fn_is_public = matches!(solution_fn.vis, syn::Visibility::Public(_));
+
     let solution_fn_returns_string =
         if let syn::ReturnType::Type(_, ref return_type) = solution_fn.decl.output {
             if let syn::Type::Path(return_type_path) = return_type.as_ref() {
@@ -82,7 +79,7 @@ fn solution_contains_neccesary_fn(ast: &File) -> bool {
 }
 
 impl Analyze for ReverseStringAnalyzer {
-    fn analyze(&self, solution_ast: &File) -> Result<AnalysisOutput> {
+    fn analyze(&self, solution_ast: &File, _solution_raw: &str) -> Result<AnalysisOutput> {
         // Check if the 'reverse' function is present, before
         // running any lints on the solution.
         if !solution_contains_neccesary_fn(solution_ast) {
