@@ -1,6 +1,8 @@
 # rust-analyzer
 
-`rust-analyzer` is a static analysis utility that is used for the automatic mentoring of the common [Rust track](https://exercism.io/tracks/rust) solutions. It is being developed as part of the [Exercism Strategy initiative](https://exercism.io/strategy). The general design of the utility conforms to the [Interface document](https://github.com/exercism/automated-mentoring-support/blob/master/docs/interface.md).
+*Note to reader*: Some links below are broken or refer to older versions of Exercism. Exercism's [v3 documentation](https://github.com/exercism/v3-docs) documents the current and future efforts.
+
+`rust-analyzer` is a static analysis utility that is used for the automatic mentoring of the common [Rust track](https://exercism.io/tracks/rust) solutions. It is being developed as part of the [Exercism Strategy initiative](https://exercism.io/strategy). ~~The general design of the utility conforms to the [Interface document](https://github.com/exercism/automated-mentoring-support/blob/master/docs/interface.md)~~.
 
 ## Supported exercises
 
