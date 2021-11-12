@@ -1,38 +1,24 @@
 use crate::prelude::*;
 
-const IMPL_DISPLAY: &str = "Nice work using `impl Display` to implement to_string.";
-
-const JUST_STORE_MINUTES: &str =
-    "(Some people don't bother storing the hours in the struct which simplifies things a bit.)";
-
-const DERIVE_PARTIAL_EQ: &str = "Equality can be derived automatically (`#[derive(PartialEq)]`).";
-const DERIVE_DEBUG: &str = "Debug can be derived automatically (`#[derive(Debug)]`).";
-
-const REM_EUCLID: &str =
-    "Alternatively to `%` and `/` you can use `rem_euclid` and `div_euclid` which \
-    [differ](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=617965fa5096580c67b809e0bc786917) \
-    when negatives are involved.";
-
-const SUGGEST_IMPL_DISPLAY: &str = "Rather than `impl ToString` \
-    it's better to `impl Display` \
-    and then we will get `to_string` for free.";
-
-const CELEBRATE_REM_EUCLID: &str = "Nice work using rem_euclid!";
-
-const IMPROVE_FORMAT_STRING: &str = "Have a look at \
-    [std::fmt](https://doc.rust-lang.org/std/fmt/#width) \
-    for a more succinct way to format the number.";
+const IMPL_DISPLAY: &str = "rust.clock.impl_display_used";
+const ONLY_STORE_MINUTES: &str = "rust.clock.only_store_minutes";
+const DERIVE_PARTIAL_EQ: &str = "rust.clock.derive_partial_eq";
+const DERIVE_DEBUG: &str = "rust.clock.derive_debug";
+const USE_REM_EUCLID: &str = "rust.clock.use_rem_euclid";
+const SUGGEST_IMPL_DISPLAY: &str = "rust.clock.use_impl_display";
+const REM_EUCLID_USED: &str = "rust.clock.rem_euclid_used";
+const IMPROVE_FORMAT_STRING: &str = "rust.clock.improve_format_string";
 
 // Order here will be order displayed in to user.
 pub static LINTS: &[Lint] = &[
     good!("Display for Clock" => IMPL_DISPLAY),
-    good!("rem_euclid" => CELEBRATE_REM_EUCLID),
+    good!("rem_euclid" => REM_EUCLID_USED),
     bad_if_missing!(":02" | ":0>2" | ":>02" => IMPROVE_FORMAT_STRING),
     bad!("Debug for Clock" => DERIVE_DEBUG),
     bad!("PartialEq for Clock" => DERIVE_PARTIAL_EQ),
     bad!("ToString for Clock" => SUGGEST_IMPL_DISPLAY),
-    note_if_missing!("rem_euclid" => REM_EUCLID),
-    note!("hours: i32," => JUST_STORE_MINUTES),
+    note_if_missing!("rem_euclid" => USE_REM_EUCLID),
+    note!("hours: i32," => ONLY_STORE_MINUTES),
 ];
 
 pub struct ClockAnalyzer;
@@ -109,8 +95,8 @@ impl Clock {
                 vec![
                     IMPL_DISPLAY.into(),
                     DERIVE_PARTIAL_EQ.into(),
-                    REM_EUCLID.to_string(),
-                    JUST_STORE_MINUTES.into(),
+                    USE_REM_EUCLID.to_string(),
+                    ONLY_STORE_MINUTES.into(),
                 ],
             ),
         );
