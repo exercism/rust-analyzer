@@ -1,37 +1,29 @@
 use crate::prelude::*;
 
-const LITERALS_WITH_UNDERSCORE: &str =
-    "I like the large numeric is formatted with underscores to be more readable.";
-const PLUS_OP_USED: &str = "I like this solution directly adds `Duration` to `start` with \
-    the `+` operator.";
+const LITERAL_WITH_UNDERSCORE_USED: &str = "rust.general.literal_with_underscore_used";
+const PLUS_OP_USED: &str = "rust.gigasecond.plus_operator_used";
 
-const PREFER_LITERAL: &'static str = "Rather than using `.pow`, rust number literals can have \
-    `_` in them to make them more readable, for example: `1_000`. (This also avoids the cast)";
-const SUGGEST_ADD: &'static str = "This could be simplified to `start + Duration::seconds`.";
-const SUGGEST_OP: &'static str = "Did you know that the `+` operator works for DateTime?";
+const PREFER_LITERAL: &'static str = "rust.gigasecond.literal_instead_of_pow";
+const ADD_DURATION: &'static str = "rust.gigasecond.add_duration";
+const USE_PLUS_OP: &'static str = "rust.gigasecond.use_plus_operator";
 
-const RUST_FMT: &'static str = "A minor style point is that usually \
-    `rustfmt` will usually put `use` elements in alphabetical order. In larger programs with \
-    a lot of `use` statements it can be helpful to have them ordered alphabetically.";
-const GOOD_FOCUS_ON_OVERFLOW: &str = "Good idea considering overflow conditions by using \
-    `checked_add_signed` method of `DateTime<Utc>`.";
-const HINT_LITERAL_SEPARATERS: &str = "Did you know that rust number literals can have `_` in \
-    them to make them more readable? For example: `1_000`";
-const GOOD_NO_RETURN_STATEMENT: &str = "I like that the expression is directly returned instead \
-    of being set to a binding and returning the binding or using return and a semicolon.";
-const PERFECT: &str = "Perfect";
+const SORT_USE_ELEMENTS: &'static str = "rust.general.sort_use_elements";
+const CHECKED_OVERFLOW: &str = "rust.gigasecond.checked_overflow";
+const USE_LITERAL_WITH_UNDERSCORE: &str = "rust.general.use_literal_with_underscore";
+const DIRECT_RETURN_EXPRESSION: &str = "rust.general.direct_return_expression";
+const PERFECT: &str = "rust.general.perfect";
 
 pub static LINTS: &[Lint] = &[
-    good!("1_000_000_000" => LITERALS_WITH_UNDERSCORE),
+    good!("1_000_000_000" => LITERAL_WITH_UNDERSCORE_USED),
     good!("start +" => PLUS_OP_USED),
     good!("start + Duration::seconds(1_000_000_000)" => PERFECT),
     bad!(".pow(" => PREFER_LITERAL),
-    bad!("Utc.timestamp(" => SUGGEST_ADD),
-    bad!("start.add(" => SUGGEST_OP),
-    note!("use chrono::{DateTime, Utc, Duration};" => RUST_FMT),
-    good!("checked_add_signed" => GOOD_FOCUS_ON_OVERFLOW),
-    bad_if_missing!("_" => HINT_LITERAL_SEPARATERS),
-    good_if_missing!(";" => GOOD_NO_RETURN_STATEMENT),
+    bad!("Utc.timestamp(" => ADD_DURATION),
+    bad!("start.add(" => USE_PLUS_OP),
+    note!("use chrono::{DateTime, Utc, Duration};" => SORT_USE_ELEMENTS),
+    good!("checked_add_signed" => CHECKED_OVERFLOW),
+    bad_if_missing!("_" => USE_LITERAL_WITH_UNDERSCORE),
+    good_if_missing!(";" => DIRECT_RETURN_EXPRESSION),
 ];
 
 pub struct GigasecondAnalyzer;
@@ -72,7 +64,7 @@ pub fn after(start: DateTime<Utc>) -> DateTime<Utc> {
             AnalysisOutput::new(
                 AnalysisStatus::Approve,
                 vec![
-                    LITERALS_WITH_UNDERSCORE.to_string(),
+                    LITERAL_WITH_UNDERSCORE_USED.to_string(),
                     PLUS_OP_USED.to_string(),
                 ],
             ),

@@ -9,18 +9,19 @@ pub enum GeneralComment {
     FailedToParseSolutionFile,
 }
 
+const GENERAL_COMMENT_PREFIX: &str = "rust.general";
+
 impl Display for GeneralComment {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use GeneralComment::*;
         write!(
             f,
-            "{}",
+            "{}.{}",
+            GENERAL_COMMENT_PREFIX,
             match self {
-                SolutionFileNotFound => "No lib.rs file was submitted?",
-                SolutionFunctionNotFound =>
-                    "The solution method could not be found. \
-                Have given methods been renamed?",
-                FailedToParseSolutionFile => "The solution could not be parsed.",
+                SolutionFileNotFound => "solution_file_not_found",
+                SolutionFunctionNotFound => "solution_function_not_found",
+                FailedToParseSolutionFile => "failed_to_parse_solution_file",
             }
         )
     }
