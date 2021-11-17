@@ -24,7 +24,7 @@ pub struct ReverseStringAnalyzer;
 fn solution_contains_neccesary_fn(ast: &File) -> bool {
     let solution_fn = if let Some(syn::Item::Fn(func)) = ast.items.iter().find(|item| {
         if let syn::Item::Fn(item_fn) = item {
-            item_fn.ident == "reverse"
+            item_fn.sig.ident == "reverse"
         } else {
             false
         }
@@ -36,12 +36,12 @@ fn solution_contains_neccesary_fn(ast: &File) -> bool {
     let solution_fn_is_public = matches!(solution_fn.vis, syn::Visibility::Public(_));
 
     let solution_fn_returns_string =
-        if let syn::ReturnType::Type(_, ref return_type) = solution_fn.decl.output {
+        if let syn::ReturnType::Type(_, ref return_type) = solution_fn.sig.output {
             if let syn::Type::Path(return_type_path) = return_type.as_ref() {
                 let segments = &return_type_path.path.segments;
                 segments.len() == 1
                     && if let Some(segment) = segments.first() {
-                        segment.value().ident == "String"
+                        segment.ident == "String"
                     } else {
                         false
                     }
@@ -51,30 +51,27 @@ fn solution_contains_neccesary_fn(ast: &File) -> bool {
         } else {
             false
         };
-    let solution_fn_accepts_str =
-        if let Some(syn::punctuated::Pair::End(syn::FnArg::Captured(syn::ArgCaptured {
-            ty: syn::Type::Reference(typ),
+    let solution_fn_accepts_str = if let Some(syn::FnArg::Typed(syn::PatType {
+        ty: box syn::Type::Reference(typ),
+        ..
+    })) = solution_fn.sig.inputs.first()
+    {
+        if let syn::Type::Path(syn::TypePath {
+            path: syn::Path { segments, .. },
             ..
-        }))) = solution_fn.decl.inputs.first()
+        }) = typ.elem.as_ref()
         {
-            if let syn::Type::Path(syn::TypePath {
-                path: syn::Path { segments, .. },
-                ..
-            }) = typ.elem.as_ref()
-            {
-                if let Some(syn::punctuated::Pair::End(syn::PathSegment { ident, .. })) =
-                    segments.first()
-                {
-                    ident == "str"
-                } else {
-                    false
-                }
+            if let Some(syn::PathSegment { ident, .. }) = segments.first() {
+                ident == "str"
             } else {
                 false
             }
         } else {
             false
-        } && solution_fn.decl.inputs.len() == 1;
+        }
+    } else {
+        false
+    } && solution_fn.sig.inputs.len() == 1;
     solution_fn_is_public && solution_fn_returns_string && solution_fn_accepts_str
 }
 

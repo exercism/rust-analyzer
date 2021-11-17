@@ -36,7 +36,7 @@ fn check_for_extern_crate(ast: &File, output: &mut AnalysisOutput) -> Result<()>
 fn check_for_standard_solution(ast: &File, output: &mut AnalysisOutput) -> Result<()> {
     let reverse_fn = if let Some(syn::Item::Fn(func)) = ast.items.iter().find(|item| {
         if let syn::Item::Fn(item_fn) = item {
-            item_fn.ident == "reverse"
+            item_fn.sig.ident == "reverse"
         } else {
             false
         }
@@ -71,15 +71,11 @@ fn check_for_standard_solution(ast: &File, output: &mut AnalysisOutput) -> Resul
                     if method != "chars" {
                         false
                     } else if let syn::Expr::Path(syn::ExprPath { path, .. }) = receiver.as_ref() {
-                        if let Some(syn::punctuated::Pair::End(path_segment)) =
-                            path.segments.first()
-                        {
-                            if let Some(syn::punctuated::Pair::End(syn::FnArg::Captured(
-                                syn::ArgCaptured {
-                                    pat: syn::Pat::Ident(syn::PatIdent { ident, .. }),
-                                    ..
-                                },
-                            ))) = reverse_fn.decl.inputs.first()
+                        if let Some(path_segment) = path.segments.first() {
+                            if let Some(syn::FnArg::Typed(syn::PatType {
+                                pat: box syn::Pat::Ident(syn::PatIdent { ident, .. }),
+                                ..
+                            })) = reverse_fn.sig.inputs.first()
                             {
                                 *ident == path_segment.ident
                             } else {
@@ -113,7 +109,7 @@ fn check_for_standard_solution(ast: &File, output: &mut AnalysisOutput) -> Resul
 fn check_for_optimal_solution(ast: &File, output: &mut AnalysisOutput) -> Result<()> {
     let reverse_fn = if let Some(syn::Item::Fn(func)) = ast.items.iter().find(|item| {
         if let syn::Item::Fn(item_fn) = item {
-            item_fn.ident == "reverse"
+            item_fn.sig.ident == "reverse"
         } else {
             false
         }
@@ -150,22 +146,18 @@ fn check_for_optimal_solution(ast: &File, output: &mut AnalysisOutput) -> Result
                 {
                     if method != "graphemes" {
                         false
-                    } else if let Some(syn::punctuated::Pair::End(syn::Expr::Lit(syn::ExprLit {
+                    } else if let Some(syn::Expr::Lit(syn::ExprLit {
                         lit: syn::Lit::Bool(syn::LitBool { value, .. }),
                         ..
-                    }))) = args.first()
+                    })) = args.first()
                     {
                         *value
                     } else if let syn::Expr::Path(syn::ExprPath { path, .. }) = receiver.as_ref() {
-                        if let Some(syn::punctuated::Pair::End(path_segment)) =
-                            path.segments.first()
-                        {
-                            if let Some(syn::punctuated::Pair::End(syn::FnArg::Captured(
-                                syn::ArgCaptured {
-                                    pat: syn::Pat::Ident(syn::PatIdent { ident, .. }),
-                                    ..
-                                },
-                            ))) = reverse_fn.decl.inputs.first()
+                        if let Some(path_segment) = path.segments.first() {
+                            if let Some(syn::FnArg::Typed(syn::PatType {
+                                pat: box syn::Pat::Ident(syn::PatIdent { ident, .. }),
+                                ..
+                            })) = reverse_fn.sig.inputs.first()
                             {
                                 *ident == path_segment.ident
                             } else {
