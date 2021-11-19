@@ -6,3 +6,4 @@
 .github
 .gitignore
 .gitattributes
+.dockerignore
