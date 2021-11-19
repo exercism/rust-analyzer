@@ -7,3 +7,4 @@
 .gitignore
 .gitattributes
 .dockerignore
+Dockerfile
