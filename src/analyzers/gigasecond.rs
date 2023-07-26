@@ -3,11 +3,11 @@ use crate::prelude::*;
 const LITERAL_WITH_UNDERSCORE_USED: &str = "rust.general.literal_with_underscore_used";
 const PLUS_OP_USED: &str = "rust.gigasecond.plus_operator_used";
 
-const PREFER_LITERAL: &'static str = "rust.gigasecond.literal_instead_of_pow";
-const ADD_DURATION: &'static str = "rust.gigasecond.add_duration";
-const USE_PLUS_OP: &'static str = "rust.gigasecond.use_plus_operator";
+const PREFER_LITERAL: &str = "rust.gigasecond.literal_instead_of_pow";
+const ADD_DURATION: &str = "rust.gigasecond.add_duration";
+const USE_PLUS_OP: &str = "rust.gigasecond.use_plus_operator";
 
-const SORT_USE_ELEMENTS: &'static str = "rust.general.sort_use_elements";
+const SORT_USE_ELEMENTS: &str = "rust.general.sort_use_elements";
 const CHECKED_OVERFLOW: &str = "rust.gigasecond.checked_overflow";
 const USE_LITERAL_WITH_UNDERSCORE: &str = "rust.general.use_literal_with_underscore";
 const DIRECT_RETURN_EXPRESSION: &str = "rust.general.direct_return_expression";

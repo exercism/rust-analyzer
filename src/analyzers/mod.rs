@@ -93,7 +93,7 @@ pub trait Analyze {
         &self,
         method_hint: &str,
         solution_raw: &str,
-        lints: &[fn(&str) -> Option<(i32, String)>],
+        lints: &[Lint],
         pass_threshold: i32,
     ) -> Result<AnalysisOutput> {
         if !solution_raw.contains(method_hint) {
