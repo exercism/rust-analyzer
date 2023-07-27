@@ -13,8 +13,9 @@ version = "1.0.91"
 features = ["derive"]
 
 [dependencies.clap]
-version = "2.32.0"
+version = "4.0.0"
 default-features = false
+features = ["std"]
 
 [dependencies.syn]
 version = "2.0.27"
