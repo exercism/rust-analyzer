@@ -44,7 +44,7 @@ pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
         )
     } else {
         let source = &fs::read_to_string(solution_file_path)?;
-        if let Ok(solution_ast) = syn::parse_file(&source) {
+        if let Ok(solution_ast) = syn::parse_file(source) {
             // Solution file exists and can be parsed by syn => run analysis
             get_analyzer(slug)?.analyze(&solution_ast, source)?
         } else {

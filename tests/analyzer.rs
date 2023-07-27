@@ -13,15 +13,19 @@ const REVERSE_STRING_SLUG: &str = "reverse-string";
 fn check_analysis_json(solution_dir_path: &Path, expected: &AnalysisOutput) {
     let analysis_json_path = solution_dir_path.join("analysis.json");
     assert!(analysis_json_path.exists());
-    let analysis_json_content = fs::read_to_string(&analysis_json_path).expect(&format!(
-        "Failed to read the analysis.json file at path {}",
-        analysis_json_path.display()
-    ));
-    let analysis_json_output: serde_json::Value = serde_json::from_str(&analysis_json_content)
-        .expect(&format!(
-            "Failed to deserialize the content of the analysis.json file at path {}",
+    let analysis_json_content = fs::read_to_string(&analysis_json_path).unwrap_or_else(|_| {
+        panic!(
+            "Failed to read the analysis.json file at path {}",
             analysis_json_path.display()
-        ));
+        )
+    });
+    let analysis_json_output: serde_json::Value = serde_json::from_str(&analysis_json_content)
+        .unwrap_or_else(|_| {
+            panic!(
+                "Failed to deserialize the content of the analysis.json file at path {}",
+                analysis_json_path.display()
+            )
+        });
     assert_eq!(
         analysis_json_output,
         serde_json::to_value(expected).unwrap()
