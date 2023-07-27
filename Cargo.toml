@@ -1,24 +1,15 @@
 [package]
 name = "rust-analyzer"
 version = "0.4.2"
-edition = "2018"
+edition = "2021"
 description = "Exercism's automated analyzer for the Rust track."
 
 [dependencies]
-failure = "0.1.5"
-serde_json = "1.0.39"
-
-[dependencies.serde]
-version = "1.0.91"
-features = ["derive"]
-
-[dependencies.clap]
-version = "2.32.0"
-default-features = false
-
-[dependencies.syn]
-version = "1.0"
-features = ["full"]
+clap = { version = "4.3.19", default-features = false, features = ["std"] }
+serde = { version = "1.0.176", features = ["derive"] }
+serde_json = "1.0.104"
+syn = { version = "2.0.27", features = ["full"] }
+thiserror = "1.0.44"
 
 [dev-dependencies]
-rayon = "1.5"
+rayon = "1.7"

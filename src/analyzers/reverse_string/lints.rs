@@ -50,11 +50,12 @@ fn check_for_standard_solution(ast: &File, output: &mut AnalysisOutput) -> Resul
     // Check if the "reverse" function contains the "input.chars().rev().collect()"
     // solution
     let has_standard_solution = reverse_fn.block.stmts.iter().any(|stmt| {
-        if let syn::Stmt::Expr(syn::Expr::MethodCall(syn::ExprMethodCall {
-            method,
-            receiver,
-            ..
-        })) = stmt
+        if let syn::Stmt::Expr(
+            syn::Expr::MethodCall(syn::ExprMethodCall {
+                method, receiver, ..
+            }),
+            _,
+        ) = stmt
         {
             if method != "collect" {
                 false
@@ -125,11 +126,12 @@ fn check_for_optimal_solution(ast: &File, output: &mut AnalysisOutput) -> Result
     // Check if the "reverse" function contains the "input.graphemes(true).rev().collect()"
     // solution
     let has_optimal_solution = reverse_fn.block.stmts.iter().any(|stmt| {
-        if let syn::Stmt::Expr(syn::Expr::MethodCall(syn::ExprMethodCall {
-            method,
-            receiver,
-            ..
-        })) = stmt
+        if let syn::Stmt::Expr(
+            syn::Expr::MethodCall(syn::ExprMethodCall {
+                method, receiver, ..
+            }),
+            _,
+        ) = stmt
         {
             if method != "collect" {
                 false

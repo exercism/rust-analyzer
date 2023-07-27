@@ -1,33 +1,15 @@
-use failure::Fail;
+use thiserror::Error;
 
-#[derive(Debug, Fail)]
+#[derive(Debug, Error)]
 pub enum AnalyzerError {
-    #[fail(display = "The provided solution directory does not exist: {}", _0)]
+    #[error("The provided solution directory does not exist: {0}")]
     InvalidPathError(String),
-    #[fail(display = "rust-analyzer does not support the '{}' exercise", _0)]
+    #[error("rust-analyzer does not support the '{0}' exercise")]
     InvalidSlugError(String),
-    #[fail(display = "IO error: {}", _0)]
-    IOError(#[cause] std::io::Error),
-    #[fail(display = "Solution code parsing error: {}", _0)]
-    SynError(#[cause] syn::Error),
-    #[fail(display = "Serialization/deserialization error: {}", _0)]
-    SerdeError(#[cause] serde_json::error::Error),
-}
-
-impl From<std::io::Error> for AnalyzerError {
-    fn from(err: std::io::Error) -> Self {
-        AnalyzerError::IOError(err)
-    }
-}
-
-impl From<syn::Error> for AnalyzerError {
-    fn from(err: syn::Error) -> Self {
-        AnalyzerError::SynError(err)
-    }
-}
-
-impl From<serde_json::error::Error> for AnalyzerError {
-    fn from(err: serde_json::error::Error) -> Self {
-        AnalyzerError::SerdeError(err)
-    }
+    #[error("IO error: {0}")]
+    IOError(#[from] std::io::Error),
+    #[error("Solution code parsing error: {0}")]
+    SynError(#[from] syn::Error),
+    #[error("Serialization/deserialization error: {0}")]
+    SerdeError(#[from] serde_json::error::Error),
 }
