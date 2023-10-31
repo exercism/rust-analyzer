@@ -8,3 +8,7 @@
 .gitattributes
 .dockerignore
 Dockerfile
+bin/
+!bin/run.sh
+snippets/
+tests/
