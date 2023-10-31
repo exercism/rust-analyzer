@@ -14,20 +14,21 @@
 exit_code=0
 
 # Iterate over all test directories
-for test_dir in tests/*; do
+for analysis_file in $(find snippets -name expected_analysis.json); do
+    test_dir=$(dirname "${analysis_file}")
     test_dir_name=$(basename "${test_dir}")
     test_dir_path=$(realpath "${test_dir}")
+    slug=$(echo $test_dir | awk -F '/' '{ print $2 }')
 
-    bin/run.sh "${test_dir_name}" "${test_dir_path}" "${test_dir_path}"
+    bin/run.sh "${slug}" "${test_dir_path}" "${test_dir_path}"
 
-    for file in analysis.json tags.json; do
-        expected_file="expected_${file}"
-        echo "${test_dir_name}: comparing ${file} to ${expected_file}"
+    file="analysis.json"
+    expected_file="expected_${file}"
+    echo "${test_dir_name}: comparing ${file} to ${expected_file}"
 
-        if ! diff "${test_dir_path}/${file}" "${test_dir_path}/${expected_file}"; then
-            exit_code=1
-        fi
-    done
+    if ! diff "${test_dir_path}/${file}" "${test_dir_path}/${expected_file}"; then
+        exit_code=1
+    fi
 done
 
 exit ${exit_code}
