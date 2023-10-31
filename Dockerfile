@@ -16,4 +16,4 @@ WORKDIR /opt/analyzer
 
 COPY --from=base /analyzer/bin/* ./bin/
 
-ENTRYPOINT ["bin/analyze.sh"]
+ENTRYPOINT ["bin/run.sh"]
