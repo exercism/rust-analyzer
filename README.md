@@ -49,13 +49,7 @@ cargo test
 
 ### Using Docker
 
-From the project root use the following command:
-
-```shell
-docker build -t rust_analyzer .
-```
-
-And to run the tests in docker:
+Simply run the following script to run the tests in docker:
 
 ```shell
 ./bin/run-tests-in-docker.sh
