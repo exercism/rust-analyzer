@@ -1,12 +1,15 @@
 # rust-analyzer
 
-*Note to reader*: Some links below are broken or refer to older versions of Exercism. Exercism's [v3 documentation](https://github.com/exercism/v3-docs) documents the current and future efforts.
+_Not to be confused with the [rust-analyzer of the Rust project][rust-project-rust-analyzer]!_
 
-`rust-analyzer` is a static analysis utility that is used for the automatic mentoring of the common [Rust track](https://exercism.io/tracks/rust) solutions. It is being developed as part of the [Exercism Strategy initiative](https://exercism.io/strategy). ~~The general design of the utility conforms to the [Interface document](https://github.com/exercism/automated-mentoring-support/blob/master/docs/interface.md)~~.
+`rust-analyzer` is a static analysis utility that is used for the automatic mentoring of exercise solutions of [Exercism's Rust track][exercism-rust].
+Please find general documentation about Exercism's language analyzers [here][analyzers-doc].
 
 ## Supported exercises
 
-- [`reverse-string`](https://github.com/exercism/rust-analyzer/blob/master/src/analyzers/reverse_string/README.md)
+- [`reverse-string`](./src/analyzers/reverse_string/README.md)
+- [`gigasecond`](./src/analyzers/gigasecond.rs)
+- [`clock`](./src/analyzers/clock.rs)
 
 ## Usage
 
@@ -17,7 +20,7 @@ The utility can be used on the local machine. It accepts two required parameters
 
 For example:
 ```shell
-$ rust-analyzer -p ~/solution-238382y7sds7fsadfasj23j/ -s reverse-string
+rust-analyzer -p ~/solution-238382y7sds7fsadfasj23j/ -s reverse-string
 ```
 
 In the context of the automatic mentoring the utility is invoked inside the Docker container via the `bin/analyze.sh` script.
@@ -26,25 +29,33 @@ In the context of the automatic mentoring the utility is invoked inside the Dock
 
 ### Using Cargo
 
-You should have the latest stable version of Rust installed on you machine (for instance using [rustup](https://rustup.rs/)).
-Then from the project root run
+You should have the latest stable version of Rust [installed][install-rust] on you machine.
+Then from the project root run:
+
 ```shell
-$ cargo build
-```
-To run the utility using Cargo execute the following command:
-```shell
-$ cargo run -- -s exercise_slug -p /path/to/the/solution/directory
+cargo build
 ```
 
-To run test use the following command:
+To run the utility using Cargo execute the following command:
+
 ```shell
-$ cargo test
+cargo run -- -s exercise_slug -p /path/to/the/solution/directory
+```
+
+To run tests use the following command:
+```shell
+cargo test
 ```
 
 ### Using Docker
 
-From the project root use the following command:
+Simply run the following script to run the tests in docker:
 
 ```shell
-$ docker build -t rust_analyzer .
+./bin/run-tests-in-docker.sh
 ```
+
+[rust-project-rust-analyzer]: https://github.com/rust-lang/rust-analyzer
+[exercism-rust]: https://exercism.org/tracks/rust
+[analyzers-doc]: https://exercism.org/docs/building/tooling/analyzers
+[install-rust]: https://www.rust-lang.org/tools/install
