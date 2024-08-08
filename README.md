@@ -2,32 +2,21 @@
 
 _Not to be confused with the [rust-analyzer of the Rust project][rust-project-rust-analyzer]!_
 
-`rust-analyzer` is a static analysis utility that is used for the automatic mentoring of exercise solutions of [Exercism's Rust track][exercism-rust].
+`rust-analyzer` is a little wrapper around clippy that massages its output to adhere to Exercism's [analyzer interface][analyzer-interface].
+It is used to provide clippy's feedback to submissions on [Exercism's Rust track][exercism-rust].
 Please find general documentation about Exercism's language analyzers [here][analyzers-doc].
-
-## Supported exercises
-
-- [`reverse-string`](./src/analyzers/reverse_string/README.md)
-- [`gigasecond`](./src/analyzers/gigasecond.rs)
-- [`clock`](./src/analyzers/clock.rs)
 
 ## Usage
 
-The utility can be used on the local machine. It accepts two required parameters:
+To run the utility using Cargo execute the following command:
 
-- `--path` (`-p`) - path to the solution directory.
-- `--slug` (`-s`) - the slug of the exercise that is being analyzed.
-
-For example:
 ```shell
-rust-analyzer -p ~/solution-238382y7sds7fsadfasj23j/ -s reverse-string
+cargo run -- <slug> <solution_dir> <output_dir>
 ```
 
-In the context of the automatic mentoring the utility is invoked inside the Docker container via the `bin/analyze.sh` script.
+In the context of the automatic mentoring the utility is invoked inside the Docker container via the `bin/run.sh` script.
 
 ## Building
-
-### Using Cargo
 
 You should have the latest stable version of Rust [installed][install-rust] on you machine.
 Then from the project root run:
@@ -36,26 +25,22 @@ Then from the project root run:
 cargo build
 ```
 
-To run the utility using Cargo execute the following command:
+## Testing
 
-```shell
-cargo run -- -s exercise_slug -p /path/to/the/solution/directory
-```
-
-To run tests use the following command:
-```shell
-cargo test
-```
-
-### Using Docker
-
-Simply run the following script to run the tests in docker:
+The main tests are run in docker, use the following script:
 
 ```shell
 ./bin/run-tests-in-docker.sh
 ```
 
+For unit tests:
+
+```shell
+cargo test
+```
+
 [rust-project-rust-analyzer]: https://github.com/rust-lang/rust-analyzer
+[analyzer-interface]: https://exercism.org/docs/building/tooling/analyzers/interface
 [exercism-rust]: https://exercism.org/tracks/rust
 [analyzers-doc]: https://exercism.org/docs/building/tooling/analyzers
 [install-rust]: https://www.rust-lang.org/tools/install

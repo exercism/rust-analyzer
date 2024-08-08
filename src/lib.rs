@@ -1,82 +1,77 @@
-#[macro_use]
-pub mod analyzers;
-pub mod errors;
-pub mod prelude;
+use std::{path::Path, process::Command};
 
-use analyzers::{
-    comments::GeneralComment,
-    output::{AnalysisOutput, AnalysisStatus},
-    Analyze, ReverseStringAnalyzer,
-};
+use anyhow::{Context, Result};
+use serde::Serialize;
 
-use analyzers::clock::ClockAnalyzer;
-use analyzers::gigasecond::GigasecondAnalyzer;
-use errors::AnalyzerError;
-use std::{fs, path::Path};
+pub fn analyze_exercise(solution_dir: &Path) -> Result<AnalysisOutput> {
+    let clippy_output = Command::new("cargo")
+        .arg("clippy")
+        .arg("--quiet") // suppress compilation progress output
+        .arg("--manifest-path")
+        .arg(solution_dir.join("Cargo.toml").display().to_string())
+        .output()
+        .context("failed to run clippy")?
+        .stderr;
+    let clippy_output =
+        String::from_utf8(clippy_output).context("failed to parse clippy output to UTF-8")?;
 
-pub type Result<T> = std::result::Result<T, AnalyzerError>;
+    let comments = clippy_output
+        .split("\n\n")
+        .filter(|s| !s.trim().is_empty())
+        .map(Into::into)
+        .map(AnalysisComment::new)
+        .collect();
+    Ok(AnalysisOutput { comments })
+}
 
-/// Given the `slug` str, return the appropriate analyzer
-/// or an error, if there is no analyzer implemented for the `slug`.
-fn get_analyzer(slug: &str) -> Result<&dyn Analyze> {
-    match slug {
-        "reverse-string" => Ok(&ReverseStringAnalyzer),
-        "clock" => Ok(&ClockAnalyzer),
-        "gigasecond" => Ok(&GigasecondAnalyzer),
-        _ => Err(AnalyzerError::InvalidSlugError(slug.to_string())),
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+pub struct AnalysisOutput {
+    // summary: String, // optional in spec
+    comments: Vec<AnalysisComment>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+struct AnalysisComment {
+    comment: WebsiteCopyPointer,
+    params: ClippyParams,
+    r#type: AnalysisType,
+}
+
+impl AnalysisComment {
+    fn new(clippy_msg: String) -> Self {
+        Self {
+            comment: WebsiteCopyPointer::GeneralClippy,
+            params: ClippyParams { clippy_msg },
+            r#type: AnalysisType::Informative,
+        }
     }
 }
 
-/// Analyzes the solution at the `solution_dir` directory, using the analyzer,
-/// the implementation of which depends on the `slug` argument. Writes the
-/// result of the analysis to the `solution_dir/analysis.json` file.
-pub fn analyze_exercise(slug: &str, solution_dir: &str) -> Result<()> {
-    let solution_dir_path = Path::new(solution_dir);
-    if !solution_dir_path.exists() {
-        return Err(AnalyzerError::InvalidPathError(solution_dir.to_string()));
-    }
-    let solution_file_path = solution_dir_path.join("src").join("lib.rs");
-    let analysis_output = if !solution_file_path.exists() {
-        // Solution file does not exist => refer to mentor.
-        AnalysisOutput::new(
-            AnalysisStatus::ReferToMentor,
-            vec![GeneralComment::FailedToParseSolutionFile.to_string()],
-        )
-    } else {
-        let source = &fs::read_to_string(solution_file_path)?;
-        if let Ok(solution_ast) = syn::parse_file(source) {
-            // Solution file exists and can be parsed by syn => run analysis
-            get_analyzer(slug)?.analyze(&solution_ast, source)?
-        } else {
-            // Solution file could not be parsed by syn => refer to mentor
-            AnalysisOutput::new(
-                AnalysisStatus::ReferToMentor,
-                vec![GeneralComment::FailedToParseSolutionFile.to_string()],
-            )
-        }
-    };
-    analysis_output.write(&solution_dir_path.join("analysis.json"))?;
-    Ok(())
+/// Must reference a comment in the website-copy repo.
+/// A dot (`.`) represents a file path separator.
+/// https://github.com/exercism/website-copy/tree/main/analyzer-comments/rust
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+enum WebsiteCopyPointer {
+    #[serde(rename = "rust.general.clippy")]
+    GeneralClippy,
 }
 
-#[cfg(test)]
-mod test {
-    use super::analyze_exercise;
-    use crate::errors::AnalyzerError;
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+struct ClippyParams {
+    clippy_msg: String,
+}
 
-    #[test]
-    fn analyze_exercise_returns_error_for_the_unknown_slug() {
-        match analyze_exercise("unknown-slug", "snippets/reverse-string/approve_1") {
-            Err(AnalyzerError::InvalidSlugError(_)) => {},
-            _ => panic!("analyze_exercise must return the InvalidSlugError variant if the wrong slug is provided"),
-        }
-    }
-
-    #[test]
-    fn analyze_exercise_returns_error_for_the_invalid_solution_dir() {
-        match analyze_exercise("reverse-string", "/some/random/path") {
-            Err(AnalyzerError::InvalidPathError(_)) => {},
-            _ => panic!("analyze_exercise must return the InvalidPathError variant if the invalid exercise directory is provided"),
-        }
-    }
+/// This enum is defined for the sake of completeness and clarity about the
+/// analyzer interface. However, only the "informative" type is used for
+/// messages generated by clippy. This is because clippy is quite aggressive
+/// and we would risk inconveniencing our users if we pushed them to fix every
+/// single clippy warning.
+#[allow(unused)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "lowercase")]
+enum AnalysisType {
+    Essential,
+    Actionable,
+    Informative,
+    Celebratory,
 }

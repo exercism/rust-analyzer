@@ -5,11 +5,9 @@ edition = "2021"
 description = "Exercism's automated analyzer for the Rust track."
 
 [dependencies]
-clap = { version = "4.3.19", default-features = false, features = ["std"] }
+anyhow = "1.0.86"
 serde = { version = "1.0.176", features = ["derive"] }
 serde_json = "1.0.104"
-syn = { version = "2.0.27", features = ["full"] }
-thiserror = "1.0.44"
 
 [dev-dependencies]
-rayon = "1.7"
+tempfile = "3.12.0"
