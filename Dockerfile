@@ -1,20 +1,18 @@
-FROM rust:1.71-slim as base
+FROM rust:1.80-slim AS base
 
 WORKDIR /analyzer
 
-RUN apt-get update && \
-    apt-get install -y musl musl-dev musl-tools && \
-    rustup target add x86_64-unknown-linux-musl
-
 COPY . .
 
-RUN cargo build --release --target=x86_64-unknown-linux-musl && \
-    cp target/x86_64-unknown-linux-musl/release/rust-analyzer ./bin/
+RUN cargo build --release
 
-FROM alpine:3.18.4
+FROM rust:1.80-slim
 
 WORKDIR /opt/analyzer
 
-COPY --from=base /analyzer/bin/* ./bin/
+RUN rustup component add clippy
+
+COPY ./bin/run.sh ./bin/
+COPY --from=base /analyzer/target/release/rust-analyzer ./bin/rust-analyzer
 
 ENTRYPOINT ["bin/run.sh"]
