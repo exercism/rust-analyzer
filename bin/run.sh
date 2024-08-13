@@ -1,3 +1,8 @@
 #!/usr/bin/env sh
+set -eu
 
-/opt/analyzer/bin/rust-analyzer --slug $1 --path $2
+slug="$1"
+solution_dir="$2"
+output_dir="$3"
+
+/opt/analyzer/bin/rust-analyzer "$slug" "$solution_dir" "$output_dir" 
