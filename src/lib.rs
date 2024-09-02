@@ -5,15 +5,6 @@ use serde::Serialize;
 
 pub fn analyze_exercise(solution_dir: &Path) -> Result<AnalysisOutput> {
     let manifest_path = solution_dir.join("Cargo.toml");
-    if std::fs::read_to_string(&manifest_path)
-        .context("failed to read Cargo.toml")?
-        .contains("[dependencies]")
-    {
-        // Do not run clippy on exercises that make use of dependencies.
-        // The analyzer currently has no support for dependencies like the
-        // test runner.
-        return Ok(AnalysisOutput { comments: vec![] });
-    }
 
     let clippy_output = Command::new("cargo")
         .arg("clippy")

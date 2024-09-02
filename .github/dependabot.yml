@@ -8,3 +8,13 @@ updates:
       interval: 'daily'
     labels:
       - 'x:size/small'
+  - package-ecosystem: 'cargo'
+    directory: '/local-registry'
+    schedule:
+      interval: 'weekly'
+    groups:
+      all:
+        patterns:
+         - "*"
+    labels:
+      - 'x:rep/tiny'

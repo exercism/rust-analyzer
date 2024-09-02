@@ -39,7 +39,6 @@ docker build --rm -t exercism/rust-analyzer .
 docker run \
     --rm \
     --network none \
-    --read-only \
     --mount type=bind,src="${solution_dir}",dst=/solution \
     --mount type=bind,src="${output_dir}",dst=/output \
     --mount type=tmpfs,dst=/tmp \

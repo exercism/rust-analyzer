@@ -1,3 +1,11 @@
 {
-  "comments": []
+  "comments": [
+    {
+      "comment": "rust.general.clippy",
+      "params": {
+        "clippy_msg": "warning: `--x` could be misinterpreted as pre-decrement by C programmers, is usually a no-op\n --> src/lib.rs:2:5\n  |\n2 |     --x\n  |     ^^^\n  |\n  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#double_neg\n  = note: `#[warn(clippy::double_neg)]` on by default"
+      },
+      "type": "informative"
+    }
+  ]
 }

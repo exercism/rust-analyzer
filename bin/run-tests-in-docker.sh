@@ -22,7 +22,6 @@ docker build --rm -t exercism/rust-analyzer .
 docker run \
     --rm \
     --network none \
-    --read-only \
     --mount type=bind,src="${PWD}/snippets",dst=/opt/analyzer/snippets \
     --mount type=tmpfs,dst=/tmp \
     --volume "${PWD}/bin/run-tests.sh:/opt/analyzer/bin/run-tests.sh" \
