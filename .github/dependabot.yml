@@ -5,13 +5,13 @@ updates:
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
-      interval: 'daily'
+      interval: 'monthly'
     labels:
       - 'x:size/small'
   - package-ecosystem: 'cargo'
     directory: '/local-registry'
     schedule:
-      interval: 'weekly'
+      interval: 'monthly'
     groups:
       all:
         patterns:
