@@ -3,7 +3,7 @@
     {
       "comment": "rust.general.clippy",
       "params": {
-        "clippy_msg": "warning: `--x` could be misinterpreted as pre-decrement by C programmers, is usually a no-op\n --> src/lib.rs:2:12\n  |\n2 |     return --x;\n  |            ^^^\n  |\n  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#double_neg\n  = note: `#[warn(clippy::double_neg)]` on by default"
+        "clippy_msg": "warning: use of a double negation\n --> src/lib.rs:2:12\n  |\n2 |     return --x;\n  |            ^^^\n  |\n  = note: the prefix `--` could be misinterpreted as a decrement operator which exists in other languages\n  = note: use `-= 1` if you meant to decrement the value\n  = note: `#[warn(double_negations)]` on by default\nhelp: add parentheses for clarity\n  |\n2 |     return -(-x);\n  |             +  +"
       },
       "type": "informative"
     },
