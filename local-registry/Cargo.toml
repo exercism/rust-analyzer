@@ -9,8 +9,14 @@ path = "dummy.rs"
 # IMPORTANT: These dependencies should be kept in sync with the ones at
 # https://github.com/exercism/rust-test-runner/blob/main/local-registry/Cargo.toml
 #
+# Some crates are used by a large number of solutions. For example, when a crate
+# is required or already included in the exercise skeleton. For those crates,
+# we should *never* drop support for a given major version. We can continue to
+# support old and new versions by giving the old ones an alias. The downside is
+# an increase in the size of the local registry.
+# 
 [dependencies]
-anyhow = "1.0.100"
+anyhow = "1.0.100" # pin
 arrayvec = "0.7.6"
 arr_macro = "0.2.1"
 ascii = "1.1.0"
@@ -84,7 +90,7 @@ pretty_assertions = "1.4.1"
 proptest = "1.9.0"
 quickcheck = "1.0.3"
 quickcheck_macros = "1.1.0"
-rand = "0.9.2"
+rand = "0.9.2" # pin
 rand_chacha = "0.9.0"
 rayon = "1.11.0"
 regex-lite = "0.1.8"
@@ -100,7 +106,7 @@ strum_macros = "0.27.2"
 subslice = "0.2.3"
 thiserror = "2.0.17"
 threadpool = "1.8.1"
-time = "0.3.44"
+time = "0.3.44" # pin
 tinyset = "0.5.2"
 transpose = "0.2.3"
 unicase = "2.8.1"
