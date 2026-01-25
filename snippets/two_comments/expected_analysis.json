@@ -10,7 +10,7 @@
     {
       "comment": "rust.general.clippy",
       "params": {
-        "clippy_msg": "warning: unneeded `return` statement\n --> src/lib.rs:2:5\n  |\n2 |     return --x;\n  |     ^^^^^^^^^^\n  |\n  = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return\n  = note: `#[warn(clippy::needless_return)]` on by default\nhelp: remove `return`\n  |\n2 -     return --x;\n2 +     --x\n  |"
+        "clippy_msg": "warning: unneeded `return` statement\n --> src/lib.rs:2:5\n  |\n2 |     return --x;\n  |     ^^^^^^^^^^\n  |\n  = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.93.0/index.html#needless_return\n  = note: `#[warn(clippy::needless_return)]` on by default\nhelp: remove `return`\n  |\n2 -     return --x;\n2 +     --x\n  |"
       },
       "type": "informative"
     }
