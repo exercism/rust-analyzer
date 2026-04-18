@@ -1,4 +1,4 @@
-FROM rust:1.94-slim AS base
+FROM rust:1.95-slim AS base
 
 WORKDIR /analyzer
 
@@ -7,7 +7,7 @@ COPY . .
 RUN cargo build --release
 
 # cargo-local-registry stuff is copied from the test runner
-FROM rust:1.94 AS build-cargo-local-registry
+FROM rust:1.95 AS build-cargo-local-registry
 
 # install cargo-local-registry
 RUN cargo install --locked cargo-local-registry
@@ -16,7 +16,7 @@ WORKDIR /local-registry
 COPY local-registry/* ./
 RUN cargo generate-lockfile && cargo local-registry --sync Cargo.lock .
 
-FROM rust:1.94-slim
+FROM rust:1.95-slim
 
 WORKDIR /opt/analyzer
 
