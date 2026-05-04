@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Synopsis:
-# Test the analyzer Docker image by running it against a predefined set of 
+# Test the analyzer Docker image by running it against a predefined set of
 # solutions with an expected output.
 # The analyzer Docker image is built automatically.
 
@@ -15,6 +15,23 @@
 # Stop executing when a command returns a non-zero return code
 set -e
 
+mnt_opt=""
+run_opt=""
+if ! command -v docker > /dev/null ; then
+    if ! command -v podman > /dev/null ; then
+        echo "Docker or Podman must be installed to run the tests in a container."
+        exit 1
+    fi
+    # Docker is unavailable, use Podman
+    docker() {
+        podman "$@"
+    }
+    # for SELinux systems, permit container access to mounted directories
+    mnt_opt=",Z"
+    # use same user ID for container, avoids file ownership problems
+    run_opt="--userns=keep-id"
+fi
+
 # Build the Docker image
 docker build --rm -t exercism/rust-analyzer .
 
@@ -22,9 +39,10 @@ docker build --rm -t exercism/rust-analyzer .
 docker run \
     --rm \
     --network none \
-    --mount type=bind,src="${PWD}/snippets",dst=/opt/analyzer/snippets \
+    --mount type=bind,src="${PWD}/snippets,dst=/opt/analyzer/snippets$mnt_opt" \
     --mount type=tmpfs,dst=/tmp \
-    --volume "${PWD}/bin/run-tests.sh:/opt/analyzer/bin/run-tests.sh" \
+    --mount type=bind,src="${PWD}/bin/run-tests.sh,dst=/opt/analyzer/bin/run-tests.sh$mnt_opt" \
+    $run_opt \
     --workdir /opt/analyzer \
     --entrypoint /opt/analyzer/bin/run-tests.sh \
     exercism/rust-analyzer
