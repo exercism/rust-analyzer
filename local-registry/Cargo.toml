@@ -1,19 +1,11 @@
-[package]
-name = "dummy_package"
-version = "0.1.0"
-edition = "2021"
-
-[lib]
-path = "dummy.rs"
-
 # IMPORTANT: These dependencies should be kept in sync with the ones at
-# https://github.com/exercism/rust-test-runner/blob/main/local-registry/Cargo.toml
+# https://github.com/exercism/rust-analyzer/blob/main/local-registry/Cargo.toml
 #
 # Some crates are used by a large number of solutions. For example, when a crate
 # is required or already included in the exercise skeleton. For those crates,
-# we should *never* drop support for a given major version. We can continue to
-# support old and new versions by giving the old ones an alias. The downside is
-# an increase in the size of the local registry.
+# we should NEVER drop support for a given major version. They have been marked
+# with a "# pin" comment. We can continue to support old and new versions by
+# giving the old ones an alias. An example is the rand_09 crate below.
 # 
 [dependencies]
 anyhow = "1.0.102" # pin
@@ -119,3 +111,13 @@ unzip-n = "0.1.4"
 uuid = "1.23.1"
 voca_rs = "1.15.2"
 xvii = "0.4.0"
+
+# The following is only needed so the Cargo.toml defines a valid package.
+
+[package]
+name = "dummy_package"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "/dev/null"
