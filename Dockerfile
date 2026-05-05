@@ -29,7 +29,7 @@ EOF
 # "nightly-slim", select "linux/amd64" and copy the manifest digest.
 # https://hub.docker.com/r/rustlang/rust/tags
 #
-FROM docker.io/rustlang/rust@sha256:3444fefbb69afbff45c0722c8045404c8e7f369c5202e916bd94f665b69f1b1c as rust-nightly-with-local-registry
+FROM docker.io/rustlang/rust@sha256:3444fefbb69afbff45c0722c8045404c8e7f369c5202e916bd94f665b69f1b1c AS rust-nightly-with-local-registry
 
 # add local registry
 COPY --from=build-local-registry /local-registry /local-registry
