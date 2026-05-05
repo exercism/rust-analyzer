@@ -1,36 +1,63 @@
-FROM rust:1.95-slim AS base
+############################# START SHARED LAYERS #############################
 
-WORKDIR /analyzer
+# IMPORTANT: This part of the build is shared between the test-runner and
+# analyzer. It takes a relatively large amount of space: 850 MB for the Rust
+# toolchain and 40 MB for the local cargo registry. Therefore, it's important
+# to keep this in sync between the two images. A slight mismatch in these layers
+# would lead to douple the storage requirement on Exercism's servers.
 
+FROM rust:1.95.0 AS build-local-registry
+
+WORKDIR /work
+COPY local-registry/Cargo.toml .
+
+RUN <<EOF
+set -eux
+apt-get update
+apt-get install -y gcc openssl cmake
+cargo install --locked cargo-local-registry
+cargo generate-lockfile
+cargo local-registry sync Cargo.lock /local-registry
+EOF
+
+# As of April 2026, we need to use the nightly toolchain to get JSON test output
+# tracking issue: https://github.com/rust-lang/rust/issues/49359
+#
+# The official docker image for the nightly Rust toolchain is updated every
+# day. We don't want to invalidate the build cache that often, so we pin it
+# to a specific hash. To update, go to the following page, then navigate to
+# "nightly-slim", select "linux/amd64" and copy the manifest digest.
+# https://hub.docker.com/r/rustlang/rust/tags
+#
+FROM docker.io/rustlang/rust@sha256:3444fefbb69afbff45c0722c8045404c8e7f369c5202e916bd94f665b69f1b1c AS rust-nightly-with-local-registry
+
+# add local registry
+COPY --from=build-local-registry /local-registry /local-registry
+RUN <<EOF
+echo "\
+[source.crates-io]
+registry = 'sparse+https://index.crates.io/'
+replace-with = 'local-registry'
+
+[source.local-registry]
+local-registry = '/local-registry'" >> $CARGO_HOME/config.toml
+EOF
+
+############################## END SHARED LAYERS ##############################
+
+
+FROM rust:1.95.0 AS build
+
+WORKDIR /work
 COPY . .
-
 RUN cargo build --release
 
-# cargo-local-registry stuff is copied from the test runner
-FROM rust:1.95 AS build-cargo-local-registry
 
-# install cargo-local-registry
-RUN cargo install --locked cargo-local-registry
-# download popular crates to local registry
-WORKDIR /local-registry
-COPY local-registry/* ./
-RUN cargo generate-lockfile && cargo local-registry --sync Cargo.lock .
-
-FROM rust:1.95-slim
-
-WORKDIR /opt/analyzer
+FROM rust-nightly-with-local-registry
 
 RUN rustup component add clippy
 
-COPY ./bin/run.sh ./bin/
-COPY --from=base /analyzer/target/release/rust-analyzer ./bin/rust-analyzer
-COPY --from=build-cargo-local-registry /local-registry local-registry/
-# configure local-registry
-RUN echo '[source.crates-io]\n\
-    registry = "https://github.com/rust-lang/crates.io-index"\n\
-    replace-with = "local-registry"\n\
-    \n\
-    [source.local-registry]\n\
-    local-registry = "/opt/analyzer/local-registry/"\n' >> $CARGO_HOME/config.toml
-
+WORKDIR /opt/analyzer
+COPY --from=build /work/target/release/rust-analyzer bin/
+COPY bin/run.sh bin/
 ENTRYPOINT ["bin/run.sh"]
