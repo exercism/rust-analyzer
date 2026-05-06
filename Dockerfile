@@ -49,7 +49,8 @@ EOF
 FROM rust:1.95.0 AS build
 
 WORKDIR /work
-COPY . .
+COPY Cargo.* .
+COPY src src
 RUN cargo build --release
 
 
