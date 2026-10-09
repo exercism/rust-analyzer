@@ -6,7 +6,7 @@
 # to keep this in sync between the two images. A slight mismatch in these layers
 # would lead to douple the storage requirement on Exercism's servers.
 
-FROM rust:1.95.0 AS build-local-registry
+FROM rust:1.98.1 AS build-local-registry
 
 WORKDIR /work
 COPY local-registry/Cargo.toml .
@@ -46,7 +46,7 @@ EOF
 ############################## END SHARED LAYERS ##############################
 
 
-FROM rust:1.95.0 AS build
+FROM rust:1.98.1 AS build
 
 WORKDIR /work
 COPY Cargo.* .
