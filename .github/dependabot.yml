@@ -2,19 +2,25 @@ version: 2
 
 updates:
   # Keep dependencies for GitHub Actions up-to-date
-  - package-ecosystem: 'github-actions'
-    directory: '/'
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: 'monthly'
+      interval: monthly
     labels:
-      - 'x:size/small'
-  - package-ecosystem: 'cargo'
-    directory: '/local-registry'
+      - x:size/small
+  - package-ecosystem: cargo
+    directory: /local-registry
     schedule:
-      interval: 'monthly'
+      interval: monthly
     groups:
       all:
         patterns:
-         - "*"
+         - *
     labels:
-      - 'x:rep/tiny'
+      - x:rep/tiny
+
+  # Enable updates to the dependencies of our Dockerfile
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
